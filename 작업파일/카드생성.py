@@ -265,19 +265,10 @@ if __name__ == "__main__":
     # 로컬 도현 폰트를 모든 카드에 심는다 (구글 폰트 로드 실패/지연 시에도 항상 도현이 뜨게)
     폰트경로 = (Path(__file__).parent / "DoHyeon.ttf").resolve().as_posix()
     로컬폰트 = f"<style>@font-face{{font-family:'Do Hyeon';src:url('file:///{폰트경로}') format('truetype');}}</style>\n<style>"
-    # 워터마크 (2026-09-02 사용자 확정, 시안B 벼락 느낌표): 모든 카드 우측 상단.
-    # 사진 카드 = 흰 로고 / 밝은 단색 카드 = 짙은 로고
-    로고흰 = (Path(__file__).parent / "워터마크.png").resolve().as_posix()
-    로고짙 = (Path(__file__).parent / "워터마크_짙은.png").resolve().as_posix()
     for i, c in enumerate(카드들, 1):
         c.setdefault("라벨", 스펙["라벨"])
         c.setdefault("꼬리", 스펙.get("꼬리", False))
         c.setdefault("글씨체", 스펙.get("글씨체", "도현"))
         h = 카드html(c, t, i, 전체).replace("<style>", 로컬폰트, 1)
-        로고 = 로고흰 if c.get("사진") else 로고짙
-        워터마크 = (f'<div style="position:absolute;top:44px;right:44px;z-index:9;'
-                  f'filter:drop-shadow(0 0 3px rgba(0,0,0,0.50)) drop-shadow(0 2px 10px rgba(0,0,0,0.35));">'
-                  f'<img src="file:///{로고}" style="width:88px;display:block;"></div>\n</body>')
-        h = h.replace("</body>", 워터마크, 1)
         (폴더 / f"카드{i:02d}.html").write_text(h, encoding="utf-8")
     print(f"완료: 카드 {전체}장 → {폴더}  (확인은 루트의 전체확인열기.bat)")
