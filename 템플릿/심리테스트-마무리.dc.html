@@ -1,0 +1,42 @@
+<!doctype html>
+<!-- 글자수 구간: 10자 이하 132px / 11~20자 104px / 21자 이상 84px -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #7A3BED; } a:hover { color: #7A3BED; }
+  </style>
+</helmet>
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#EBE2FF;color:#1C1533;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#7A3BED;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#635C7A;">심리 테스트</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#7A3BED;color:#FFFFFF;font-size:32px;font-weight:700;padding:14px 28px;">A를 고른 당신</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:104px;line-height:1.1;">[유형 이름]</div>
+    <div style="background:#FFFFFF;padding:44px;font-size:40px;line-height:1.6;">[유형 설명 세 줄.<br>맞다고 느낄 만한 구체적인 습관과<br>주변 반응까지 적습니다]</div>
+    <div style="background:#7A3BED;color:#FFFFFF;padding:40px;font-size:44px;font-weight:700;line-height:1.4;">친구는 뭐 나왔는지<br>물어보세요</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#635C7A;flex-shrink:0;border-top:2px solid #D6C9F5;padding-top:26px;">
+    <div>@계정명</div>
+    <div>07 / 07</div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1080,"height":1350}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

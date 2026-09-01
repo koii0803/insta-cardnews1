@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #B0202B; } a:hover { color: #7D1620; }
+  </style>
+</helmet>
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:{{t.bg}};color:{{t.ink}};display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:{{t.accent}};"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:{{t.sub}};">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:{{t.accent}};color:{{t.onAccent}};font-size:32px;font-weight:700;padding:14px 28px;">참석함 · 보통 사이</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.03em;font-size:180px;line-height:1;">10만원</div>
+    <div style="background:{{t.surface}};padding:44px;display:flex;flex-direction:column;gap:22px;">
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">같은 팀 직장 동료</div>
+      <div style="height:2px;background:{{t.line}};"></div>
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">가끔 보는 동네 지인</div>
+    </div>
+    <div style="font-size:42px;line-height:1.55;color:{{t.sub}};">가서 밥을 먹는 순간 계산이 달라집니다.<br><span style="color:{{t.accent}};font-weight:700;">식대는 넘겨야 민폐가 아닙니다.</span></div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:{{t.sub}};flex-shrink:0;border-top:2px solid {{t.line}};padding-top:26px;">
+    <div>@계정명</div>
+    <div>05 / 10</div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1080,"height":1350},"theme":{"editor":"enum","options":["alert","standard","test","benefit","rank"],"default":"standard"}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = {
+      alert:    { bg:"#FFF1CE", surface:"#FFFFFF", ink:"#171512", sub:"#6B6255", accent:"#E04A2F", onAccent:"#FFFFFF", line:"#E4D6B0" },
+      standard: { bg:"#F2ECE1", surface:"#FFFFFF", ink:"#16130E", sub:"#6A6154", accent:"#B0202B", onAccent:"#FFFFFF", line:"#DDD2BF" },
+      test:     { bg:"#EBE2FF", surface:"#FFFFFF", ink:"#1C1533", sub:"#635C7A", accent:"#7A3BED", onAccent:"#FFFFFF", line:"#D6C9F5" },
+      benefit:  { bg:"#DDEFF7", surface:"#FFFFFF", ink:"#0A2130", sub:"#4E6B7A", accent:"#0E7C86", onAccent:"#FFFFFF", line:"#BFDDE9" },
+      rank:     { bg:"#0F2340", surface:"#1B3358", ink:"#FFFFFF", sub:"#9FB4CF", accent:"#FF8A28", onAccent:"#17130C", line:"#2B4A73" }
+    };
+    return { t: T[this.props.theme] || T.standard };
+  }
+}
+</script>
+</body>
+</html>

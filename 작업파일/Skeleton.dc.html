@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #B0202B; } a:hover { color: #7D1620; }
+  </style>
+</helmet>
+<div style="position:relative;width:1080px;height:1350px;box-sizing:border-box;background:#FAF7F1;color:#16130E;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;overflow:hidden;">
+
+  <div style="position:absolute;top:0;left:80px;right:80px;bottom:0;display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:24px;">
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+  </div>
+
+  <div style="position:absolute;top:90px;left:80px;right:80px;bottom:100px;border:3px dashed #B0202B;"></div>
+
+  <div style="position:relative;height:100%;box-sizing:border-box;padding:90px 80px 100px;display:flex;flex-direction:column;gap:22px;">
+
+    <div style="display:flex;align-items:center;gap:18px;">
+      <div style="width:18px;height:18px;background:#B0202B;"></div>
+      <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">공통 골격</div>
+    </div>
+
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:72px;line-height:1.14;">1080 × 1350 · 4:5</div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;font-size:32px;line-height:1.5;color:#6A6154;">
+      <div>세이프영역 &nbsp;상 90 / 좌우 80 / 하 100 (붉은 점선)</div>
+      <div>그리드 &nbsp;6컬럼 · 거터 24 (연한 세로 띠)</div>
+      <div>고정 요소 &nbsp;상단 눈썹 / 하단 핸들 + 페이지</div>
+    </div>
+
+    <div style="height:3px;background:#DDD2BF;"></div>
+
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.1em;color:#6A6154;">타이포 스케일</div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">표지 132 / 1.08</div>
+        <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;font-size:66px;line-height:1;">표지 헤드라인</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">숫자 180 / 1.0</div>
+        <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;font-size:60px;line-height:1;">10만원</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">본문 헤드 92 / 1.16</div>
+        <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;font-size:48px;line-height:1;">본문 헤드라인</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">본문 42~46 / 1.55</div>
+        <div style="font-size:38px;line-height:1;">읽는 문장이 들어가는 자리</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">최소 28</div>
+        <div style="font-size:28px;line-height:1;">이보다 작게 쓰지 않습니다</div>
+      </div>
+    </div>
+
+    <div style="height:3px;background:#DDD2BF;"></div>
+
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.1em;color:#6A6154;">글자수 구간 — 제목 길이로 크기 결정</div>
+
+    <div style="display:flex;gap:10px;">
+      <div style="flex-grow:1;background:#FFFFFF;padding:20px 24px;">
+        <div style="font-size:24px;color:#8B8172;">10자 이하</div>
+        <div style="font-size:34px;font-weight:700;">132px</div>
+      </div>
+      <div style="flex-grow:1;background:#FFFFFF;padding:20px 24px;">
+        <div style="font-size:24px;color:#8B8172;">11~20자</div>
+        <div style="font-size:34px;font-weight:700;">104px</div>
+      </div>
+      <div style="flex-grow:1;background:#FFFFFF;padding:20px 24px;">
+        <div style="font-size:24px;color:#8B8172;">21자 이상</div>
+        <div style="font-size:34px;font-weight:700;">84px</div>
+      </div>
+    </div>
+
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.1em;color:#6A6154;">템플릿 4장</div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+      <div style="background:#B0202B;color:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">표지</div>
+      <div style="background:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">본문 (미끼 있음)</div>
+      <div style="background:#B0202B;color:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">강조 (색반전)</div>
+      <div style="background:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">마무리</div>
+      <div style="background:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">본문·강조 번갈아 쓰기</div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1080,"height":1350}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

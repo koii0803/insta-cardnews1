@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>카드뉴스 템플릿</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+  body { margin:0; padding:48px; background:#2A2723; color:#EDE7DC;
+         font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif; }
+  h1 { font-size:26px; margin:0 0 8px; letter-spacing:-0.01em; }
+  h2 { font-size:15px; font-weight:600; letter-spacing:0.12em; color:#B9AE9C;
+       margin:56px 0 20px; padding-bottom:10px; border-bottom:1px solid #4A443C; }
+  p.lead { font-size:14px; color:#B9AE9C; margin:0 0 8px; line-height:1.6; }
+  .row { display:flex; flex-wrap:wrap; gap:24px; }
+  figure { margin:0; display:flex; flex-direction:column; gap:8px; }
+  .frame { width:calc(1080px * 0.30); height:calc(1350px * 0.30);
+           overflow:hidden; background:#fff; }
+  .inner { width:1080px; height:1350px; transform:scale(0.30);
+           transform-origin:top left; }
+  figcaption { font-size:12px; color:#B9AE9C; letter-spacing:0.02em; }
+</style>
+</head>
+<body>
+<h1>카드뉴스 템플릿</h1>
+<p class="lead">1080 &times; 1350 원본을 30% 로 줄여서 보여줍니다. 파일 이름은 주제풀 태그와 같습니다.</p>
+<h2>공통 골격</h2><div class="row">
+<figure><div class="frame"><div class="inner">
+<div style="position:relative;width:1080px;height:1350px;box-sizing:border-box;background:#FAF7F1;color:#16130E;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;overflow:hidden;">
+
+  <div style="position:absolute;top:0;left:80px;right:80px;bottom:0;display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:24px;">
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+    <div style="background:rgba(176,32,43,0.06);"></div>
+  </div>
+
+  <div style="position:absolute;top:90px;left:80px;right:80px;bottom:100px;border:3px dashed #B0202B;"></div>
+
+  <div style="position:relative;height:100%;box-sizing:border-box;padding:90px 80px 100px;display:flex;flex-direction:column;gap:22px;">
+
+    <div style="display:flex;align-items:center;gap:18px;">
+      <div style="width:18px;height:18px;background:#B0202B;"></div>
+      <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">공통 골격</div>
+    </div>
+
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:72px;line-height:1.14;">1080 × 1350 · 4:5</div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;font-size:32px;line-height:1.5;color:#6A6154;">
+      <div>세이프영역 &nbsp;상 90 / 좌우 80 / 하 100 (붉은 점선)</div>
+      <div>그리드 &nbsp;6컬럼 · 거터 24 (연한 세로 띠)</div>
+      <div>고정 요소 &nbsp;상단 눈썹 / 하단 핸들 + 페이지</div>
+    </div>
+
+    <div style="height:3px;background:#DDD2BF;"></div>
+
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.1em;color:#6A6154;">타이포 스케일</div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">표지 132 / 1.08</div>
+        <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;font-size:66px;line-height:1;">표지 헤드라인</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">숫자 180 / 1.0</div>
+        <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;font-size:60px;line-height:1;">10만원</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">본문 헤드 92 / 1.16</div>
+        <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;font-size:48px;line-height:1;">본문 헤드라인</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">본문 42~46 / 1.55</div>
+        <div style="font-size:38px;line-height:1;">읽는 문장이 들어가는 자리</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="font-size:26px;color:#8B8172;min-width:210px;">최소 28</div>
+        <div style="font-size:28px;line-height:1;">이보다 작게 쓰지 않습니다</div>
+      </div>
+    </div>
+
+    <div style="height:3px;background:#DDD2BF;"></div>
+
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.1em;color:#6A6154;">글자수 구간 — 제목 길이로 크기 결정</div>
+
+    <div style="display:flex;gap:10px;">
+      <div style="flex-grow:1;background:#FFFFFF;padding:20px 24px;">
+        <div style="font-size:24px;color:#8B8172;">10자 이하</div>
+        <div style="font-size:34px;font-weight:700;">132px</div>
+      </div>
+      <div style="flex-grow:1;background:#FFFFFF;padding:20px 24px;">
+        <div style="font-size:24px;color:#8B8172;">11~20자</div>
+        <div style="font-size:34px;font-weight:700;">104px</div>
+      </div>
+      <div style="flex-grow:1;background:#FFFFFF;padding:20px 24px;">
+        <div style="font-size:24px;color:#8B8172;">21자 이상</div>
+        <div style="font-size:34px;font-weight:700;">84px</div>
+      </div>
+    </div>
+
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.1em;color:#6A6154;">템플릿 4장</div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+      <div style="background:#B0202B;color:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">표지</div>
+      <div style="background:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">본문 (미끼 있음)</div>
+      <div style="background:#B0202B;color:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">강조 (색반전)</div>
+      <div style="background:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">마무리</div>
+      <div style="background:#FFFFFF;font-size:26px;font-weight:600;padding:12px 20px;">본문·강조 번갈아 쓰기</div>
+    </div>
+
+  </div>
+</div>
+</div></div><figcaption>골격 스펙</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#FAF7F1;color:#16130E;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;padding:90px 80px 100px;display:flex;flex-direction:column;gap:28px;">
+
+  <div style="display:flex;align-items:center;gap:18px;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">테마 5종</div>
+  </div>
+
+  <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:72px;line-height:1.14;">골격은 그대로,<br>색만 갈아 끼웁니다</div>
+
+  <div style="display:flex;flex-direction:column;gap:16px;flex-grow:1;">
+
+    <div style="flex-grow:1;background:#FFF1CE;color:#171512;padding:30px 34px;display:flex;align-items:center;gap:28px;">
+      <div style="flex-grow:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:38px;font-weight:700;">반전 상식 · 경고</div>
+        <div style="font-size:26px;color:#6B6255;">물티슈 / 텀블러 / 에어프라이어</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="width:56px;height:56px;background:#FFF1CE;border:2px solid #E4D6B0;"></div>
+        <div style="width:56px;height:56px;background:#FFFFFF;border:2px solid #E4D6B0;"></div>
+        <div style="width:56px;height:56px;background:#E04A2F;"></div>
+        <div style="width:56px;height:56px;background:#171512;"></div>
+      </div>
+    </div>
+
+    <div style="flex-grow:1;background:#F2ECE1;color:#16130E;padding:30px 34px;display:flex;align-items:center;gap:28px;">
+      <div style="flex-grow:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:38px;font-weight:700;">현실 기준 · 논쟁</div>
+        <div style="font-size:26px;color:#6A6154;">축의금 / 용돈 / 더치페이 &nbsp;<span style="color:#B0202B;font-weight:700;">← 파일럿</span></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="width:56px;height:56px;background:#F2ECE1;border:2px solid #DDD2BF;"></div>
+        <div style="width:56px;height:56px;background:#FFFFFF;border:2px solid #DDD2BF;"></div>
+        <div style="width:56px;height:56px;background:#B0202B;"></div>
+        <div style="width:56px;height:56px;background:#16130E;"></div>
+      </div>
+    </div>
+
+    <div style="flex-grow:1;background:#EBE2FF;color:#1C1533;padding:30px 34px;display:flex;align-items:center;gap:28px;">
+      <div style="flex-grow:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:38px;font-weight:700;">심리 테스트 · 꿈해몽</div>
+        <div style="font-size:26px;color:#635C7A;">라면 / 치약 / 카톡 프로필</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="width:56px;height:56px;background:#EBE2FF;border:2px solid #D6C9F5;"></div>
+        <div style="width:56px;height:56px;background:#FFFFFF;border:2px solid #D6C9F5;"></div>
+        <div style="width:56px;height:56px;background:#7A3BED;"></div>
+        <div style="width:56px;height:56px;background:#1C1533;"></div>
+      </div>
+    </div>
+
+    <div style="flex-grow:1;background:#DDEFF7;color:#0A2130;padding:30px 34px;display:flex;align-items:center;gap:28px;">
+      <div style="flex-grow:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:38px;font-weight:700;">혜택 · 트렌드 · 신상</div>
+        <div style="font-size:26px;color:#4E6B7A;">지원금 / 환급금 / 편의점 신상</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="width:56px;height:56px;background:#DDEFF7;border:2px solid #BFDDE9;"></div>
+        <div style="width:56px;height:56px;background:#FFFFFF;border:2px solid #BFDDE9;"></div>
+        <div style="width:56px;height:56px;background:#0E7C86;"></div>
+        <div style="width:56px;height:56px;background:#0A2130;"></div>
+      </div>
+    </div>
+
+    <div style="flex-grow:1;background:#0F2340;color:#FFFFFF;padding:30px 34px;display:flex;align-items:center;gap:28px;">
+      <div style="flex-grow:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="font-size:38px;font-weight:700;">호기심 · 랭킹</div>
+        <div style="font-size:26px;color:#9FB4CF;">희귀직업 / 실사화 / 이색 알바</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="width:56px;height:56px;background:#0F2340;border:2px solid #2B4A73;"></div>
+        <div style="width:56px;height:56px;background:#1B3358;border:2px solid #2B4A73;"></div>
+        <div style="width:56px;height:56px;background:#FF8A28;"></div>
+        <div style="width:56px;height:56px;background:#FFFFFF;"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div></div><figcaption>테마 5종</figcaption></figure>
+</div>
+<h2>반전상식</h2><div class="row">
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#FFF1CE;color:#171512;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#E04A2F;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6B6255;">반전 상식</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#E04A2F;color:#FFFFFF;font-size:34px;font-weight:700;padding:16px 32px;">지금 확인하세요</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:126px;line-height:1.08;">[사물]로<br>닦으면 안 되는 것</div>
+    <div style="width:200px;height:14px;background:#E04A2F;"></div>
+    <div style="font-size:46px;line-height:1.5;color:#6B6255;">[무심코 하고 있는 행동 한 줄]<br>이유가 있습니다</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6B6255;flex-shrink:0;border-top:2px solid #E4D6B0;padding-top:26px;">
+    <div>@계정명</div>
+    <div>01 / 08</div>
+  </div>
+
+</div>
+</div></div><figcaption>표지</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#FFF1CE;color:#171512;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#E04A2F;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6B6255;">반전 상식</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:flex;align-items:center;gap:22px;">
+      <div style="width:64px;height:64px;background:#E04A2F;color:#FFFFFF;font-size:44px;font-weight:700;display:flex;align-items:center;justify-content:center;">X</div>
+      <div style="font-size:44px;font-weight:700;">이렇게 쓰고 있다면</div>
+    </div>
+    <div style="background:#FFFFFF;padding:48px;font-size:52px;font-weight:700;line-height:1.35;">[잘못된 사용 사례 한 줄]</div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="font-size:32px;font-weight:600;letter-spacing:0.1em;color:#6B6255;">왜 안 되냐면</div>
+      <div style="font-size:42px;line-height:1.55;">[이유를 두 줄로. 성분, 잔여물, 손상 같은<br>구체적인 근거를 넣습니다]</div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-top:8px;">
+      <div style="font-size:30px;font-weight:600;color:#6B6255;">근데 더 심한 게 있음</div>
+      <div style="font-size:34px;font-weight:700;color:#E04A2F;">&#8594;</div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6B6255;flex-shrink:0;border-top:2px solid #E4D6B0;padding-top:26px;">
+    <div>@계정명</div>
+    <div>04 / 08</div>
+  </div>
+
+</div>
+</div></div><figcaption>본문</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#E04A2F;color:#FFFFFF;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#FFFFFF;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:rgba(255,255,255,0.78);">반전 상식</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:112px;line-height:1.14;">[가장 충격적인<br>사실 한 줄]</div>
+    <div style="width:200px;height:14px;background:#FFFFFF;"></div>
+    <div style="font-size:44px;line-height:1.5;color:rgba(255,255,255,0.78);">[그래서 뭘 해야 하는지 한 줄]</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:rgba(255,255,255,0.78);flex-shrink:0;border-top:2px solid rgba(255,255,255,0.32);padding-top:26px;">
+    <div>@계정명</div>
+    <div>06 / 08</div>
+  </div>
+
+</div>
+</div></div><figcaption>강조 (색반전)</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#FFF1CE;color:#171512;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#E04A2F;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6B6255;">반전 상식</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:92px;line-height:1.16;">그럼 어떻게 하냐면</div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="background:#FFFFFF;padding:32px 40px;font-size:42px;font-weight:600;">[대안 1]</div>
+      <div style="background:#FFFFFF;padding:32px 40px;font-size:42px;font-weight:600;">[대안 2]</div>
+      <div style="background:#FFFFFF;padding:32px 40px;font-size:42px;font-weight:600;">[대안 3]</div>
+    </div>
+    <div style="background:#E04A2F;color:#FFFFFF;padding:40px;font-size:44px;font-weight:700;line-height:1.4;">집에 있는 사람한테<br>바로 보내주세요</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6B6255;flex-shrink:0;border-top:2px solid #E4D6B0;padding-top:26px;">
+    <div>@계정명</div>
+    <div>08 / 08</div>
+  </div>
+
+</div>
+</div></div><figcaption>마무리</figcaption></figure>
+</div>
+<h2>현실기준</h2><div class="row">
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#B0202B;color:#FFFFFF;font-size:34px;font-weight:700;padding:16px 32px;">기준 총정리</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:132px;line-height:1.08;">[주제]<br>딱 정해줄게</div>
+    <div style="width:200px;height:14px;background:#B0202B;"></div>
+    <div style="font-size:46px;line-height:1.5;color:#6A6154;">매번 검색했다면<br>이 [N]장으로 끝납니다</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>01 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>표지</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#B0202B;color:#FFFFFF;font-size:32px;font-weight:700;padding:14px 28px;">[조건 · 상황]</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:180px;line-height:1;letter-spacing:-0.03em;">[금액]</div>
+    <div style="background:#FFFFFF;padding:44px;display:flex;flex-direction:column;gap:22px;">
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">[해당되는 대상 1]</div>
+      <div style="height:2px;background:#DDD2BF;"></div>
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">[해당되는 대상 2]</div>
+    </div>
+    <div style="font-size:42px;line-height:1.55;color:#6A6154;">[왜 이 금액인지 한 줄 근거]</div>
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-top:8px;">
+      <div style="font-size:30px;font-weight:600;color:#6A6154;">여기서 한 칸 올라감</div>
+      <div style="font-size:34px;font-weight:700;color:#B0202B;">&#8594;</div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>05 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>본문</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#B0202B;color:#FFFFFF;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#FFFFFF;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:rgba(255,255,255,0.78);">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:112px;line-height:1.14;">[가장 논쟁되는<br>기준 한 줄]</div>
+    <div style="width:200px;height:14px;background:#FFFFFF;"></div>
+    <div style="font-size:44px;line-height:1.5;color:rgba(255,255,255,0.78);">[이 말이 왜 맞는지 한 줄]</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:rgba(255,255,255,0.78);flex-shrink:0;border-top:2px solid rgba(255,255,255,0.32);padding-top:26px;">
+    <div>@계정명</div>
+    <div>08 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>강조 (색반전)</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:88px;line-height:1.16;">한 장 요약</div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;align-items:center;gap:24px;background:#FFFFFF;padding:28px 36px;">
+        <div style="font-size:52px;font-weight:700;color:#B0202B;min-width:250px;">[값 1]</div>
+        <div style="font-size:38px;line-height:1.35;">[조건 1]</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;background:#FFFFFF;padding:28px 36px;">
+        <div style="font-size:52px;font-weight:700;color:#B0202B;min-width:250px;">[값 2]</div>
+        <div style="font-size:38px;line-height:1.35;">[조건 2]</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;background:#FFFFFF;padding:28px 36px;">
+        <div style="font-size:52px;font-weight:700;color:#B0202B;min-width:250px;">[값 3]</div>
+        <div style="font-size:38px;line-height:1.35;">[조건 3]</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;background:#FFFFFF;padding:28px 36px;">
+        <div style="font-size:52px;font-weight:700;color:#B0202B;min-width:250px;">[값 4]</div>
+        <div style="font-size:38px;line-height:1.35;">[조건 4]</div>
+      </div>
+    </div>
+    <div style="background:#B0202B;color:#FFFFFF;padding:40px;font-size:44px;font-weight:700;line-height:1.4;">필요할 때 꺼내볼 수 있게<br>저장해두세요</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>10 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>마무리</figcaption></figure>
+</div>
+<h2>심리테스트</h2><div class="row">
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#EBE2FF;color:#1C1533;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#7A3BED;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#635C7A;">심리 테스트</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#7A3BED;color:#FFFFFF;font-size:34px;font-weight:700;padding:16px 32px;">성격 테스트</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:120px;line-height:1.1;">[행동]으로 보는<br>내 성격</div>
+    <div style="width:200px;height:14px;background:#7A3BED;"></div>
+    <div style="font-size:46px;line-height:1.5;color:#635C7A;">고르기만 하면 됩니다<br>30초면 끝나요</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#635C7A;flex-shrink:0;border-top:2px solid #D6C9F5;padding-top:26px;">
+    <div>@계정명</div>
+    <div>01 / 07</div>
+  </div>
+
+</div>
+</div></div><figcaption>표지</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#EBE2FF;color:#1C1533;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#7A3BED;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#635C7A;">심리 테스트</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:84px;line-height:1.16;">당신은<br>어느 쪽인가요?</div>
+    <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:20px;">
+      <div style="background:#FFFFFF;padding:36px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:48px;font-weight:700;color:#7A3BED;">A</div>
+        <div style="font-size:36px;font-weight:600;line-height:1.35;">[선택지 A]</div>
+      </div>
+      <div style="background:#FFFFFF;padding:36px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:48px;font-weight:700;color:#7A3BED;">B</div>
+        <div style="font-size:36px;font-weight:600;line-height:1.35;">[선택지 B]</div>
+      </div>
+      <div style="background:#FFFFFF;padding:36px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:48px;font-weight:700;color:#7A3BED;">C</div>
+        <div style="font-size:36px;font-weight:600;line-height:1.35;">[선택지 C]</div>
+      </div>
+      <div style="background:#FFFFFF;padding:36px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:48px;font-weight:700;color:#7A3BED;">D</div>
+        <div style="font-size:36px;font-weight:600;line-height:1.35;">[선택지 D]</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-top:8px;">
+      <div style="font-size:30px;font-weight:600;color:#635C7A;">고른 거 기억해두세요</div>
+      <div style="font-size:34px;font-weight:700;color:#7A3BED;">&#8594;</div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#635C7A;flex-shrink:0;border-top:2px solid #D6C9F5;padding-top:26px;">
+    <div>@계정명</div>
+    <div>02 / 07</div>
+  </div>
+
+</div>
+</div></div><figcaption>본문</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#7A3BED;color:#FFFFFF;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#FFFFFF;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:rgba(255,255,255,0.78);">심리 테스트</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:112px;line-height:1.14;">[가장 뜨끔한<br>결과 한 줄]</div>
+    <div style="width:200px;height:14px;background:#FFFFFF;"></div>
+    <div style="font-size:44px;line-height:1.5;color:rgba(255,255,255,0.78);">[찔리면 이 유형이 맞습니다]</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:rgba(255,255,255,0.78);flex-shrink:0;border-top:2px solid rgba(255,255,255,0.32);padding-top:26px;">
+    <div>@계정명</div>
+    <div>05 / 07</div>
+  </div>
+
+</div>
+</div></div><figcaption>강조 (색반전)</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#EBE2FF;color:#1C1533;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#7A3BED;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#635C7A;">심리 테스트</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#7A3BED;color:#FFFFFF;font-size:32px;font-weight:700;padding:14px 28px;">A를 고른 당신</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:104px;line-height:1.1;">[유형 이름]</div>
+    <div style="background:#FFFFFF;padding:44px;font-size:40px;line-height:1.6;">[유형 설명 세 줄.<br>맞다고 느낄 만한 구체적인 습관과<br>주변 반응까지 적습니다]</div>
+    <div style="background:#7A3BED;color:#FFFFFF;padding:40px;font-size:44px;font-weight:700;line-height:1.4;">친구는 뭐 나왔는지<br>물어보세요</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#635C7A;flex-shrink:0;border-top:2px solid #D6C9F5;padding-top:26px;">
+    <div>@계정명</div>
+    <div>07 / 07</div>
+  </div>
+
+</div>
+</div></div><figcaption>마무리</figcaption></figure>
+</div>
+<h2>혜택</h2><div class="row">
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#DDEFF7;color:#0A2130;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#0E7C86;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#4E6B7A;">혜택 정보</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#0E7C86;color:#FFFFFF;font-size:34px;font-weight:700;padding:16px 32px;">TOP 3</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:120px;line-height:1.1;">모르면 못 받는<br>[기간] [혜택명]</div>
+    <div style="width:200px;height:14px;background:#0E7C86;"></div>
+    <div style="font-size:46px;line-height:1.5;color:#4E6B7A;">신청 안 하면 안 줍니다<br>마감 [날짜]</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#4E6B7A;flex-shrink:0;border-top:2px solid #BFDDE9;padding-top:26px;">
+    <div>@계정명</div>
+    <div>01 / 06</div>
+  </div>
+
+</div>
+</div></div><figcaption>표지</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#DDEFF7;color:#0A2130;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#0E7C86;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#4E6B7A;">혜택 정보</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:flex;align-items:baseline;gap:24px;">
+      <div style="font-size:72px;font-weight:700;color:#0E7C86;">01</div>
+      <div style="font-size:52px;font-weight:700;line-height:1.25;">[혜택 이름]</div>
+    </div>
+    <div style="background:#FFFFFF;padding:40px;display:flex;flex-direction:column;gap:24px;">
+      <div style="display:flex;gap:28px;align-items:baseline;">
+        <div style="font-size:32px;font-weight:600;color:#4E6B7A;min-width:150px;">대상</div>
+        <div style="font-size:38px;font-weight:600;line-height:1.35;">[해당되는 사람]</div>
+      </div>
+      <div style="height:2px;background:#BFDDE9;"></div>
+      <div style="display:flex;gap:28px;align-items:baseline;">
+        <div style="font-size:32px;font-weight:600;color:#4E6B7A;min-width:150px;">금액</div>
+        <div style="font-size:38px;font-weight:600;line-height:1.35;">[지원 금액]</div>
+      </div>
+      <div style="height:2px;background:#BFDDE9;"></div>
+      <div style="display:flex;gap:28px;align-items:baseline;">
+        <div style="font-size:32px;font-weight:600;color:#4E6B7A;min-width:150px;">기간</div>
+        <div style="font-size:38px;font-weight:600;line-height:1.35;">[신청 기간]</div>
+      </div>
+      <div style="height:2px;background:#BFDDE9;"></div>
+      <div style="display:flex;gap:28px;align-items:baseline;">
+        <div style="font-size:32px;font-weight:600;color:#4E6B7A;min-width:150px;">신청</div>
+        <div style="font-size:38px;font-weight:600;line-height:1.35;">[신청처 이름]</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-top:8px;">
+      <div style="font-size:30px;font-weight:600;color:#4E6B7A;">이거 놓치면 아까움</div>
+      <div style="font-size:34px;font-weight:700;color:#0E7C86;">&#8594;</div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#4E6B7A;flex-shrink:0;border-top:2px solid #BFDDE9;padding-top:26px;">
+    <div>@계정명</div>
+    <div>03 / 06</div>
+  </div>
+
+</div>
+</div></div><figcaption>본문</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#0E7C86;color:#FFFFFF;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#FFFFFF;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:rgba(255,255,255,0.78);">혜택 정보</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:112px;line-height:1.14;">[놓치면 손해인<br>핵심 한 줄]</div>
+    <div style="width:200px;height:14px;background:#FFFFFF;"></div>
+    <div style="font-size:44px;line-height:1.5;color:rgba(255,255,255,0.78);">[마감일 또는 조건 한 줄]</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:rgba(255,255,255,0.78);flex-shrink:0;border-top:2px solid rgba(255,255,255,0.32);padding-top:26px;">
+    <div>@계정명</div>
+    <div>05 / 06</div>
+  </div>
+
+</div>
+</div></div><figcaption>강조 (색반전)</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#DDEFF7;color:#0A2130;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#0E7C86;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#4E6B7A;">혜택 정보</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:92px;line-height:1.16;">신청은 여기서</div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="background:#FFFFFF;padding:32px 40px;display:flex;justify-content:space-between;align-items:center;gap:20px;">
+        <div style="font-size:38px;font-weight:700;">[혜택 1]</div>
+        <div style="font-size:32px;color:#4E6B7A;">[신청처]</div>
+      </div>
+      <div style="background:#FFFFFF;padding:32px 40px;display:flex;justify-content:space-between;align-items:center;gap:20px;">
+        <div style="font-size:38px;font-weight:700;">[혜택 2]</div>
+        <div style="font-size:32px;color:#4E6B7A;">[신청처]</div>
+      </div>
+      <div style="background:#FFFFFF;padding:32px 40px;display:flex;justify-content:space-between;align-items:center;gap:20px;">
+        <div style="font-size:38px;font-weight:700;">[혜택 3]</div>
+        <div style="font-size:32px;color:#4E6B7A;">[신청처]</div>
+      </div>
+    </div>
+    <div style="background:#0E7C86;color:#FFFFFF;padding:40px;font-size:44px;font-weight:700;line-height:1.4;">마감 [날짜]<br>오늘 안에 신청하세요</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#4E6B7A;flex-shrink:0;border-top:2px solid #BFDDE9;padding-top:26px;">
+    <div>@계정명</div>
+    <div>06 / 06</div>
+  </div>
+
+</div>
+</div></div><figcaption>마무리</figcaption></figure>
+</div>
+<h2>랭킹</h2><div class="row">
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#0F2340;color:#FFFFFF;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#FF8A28;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#9FB4CF;">랭킹</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#FF8A28;color:#17130C;font-size:34px;font-weight:700;padding:16px 32px;">TOP 5</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:126px;line-height:1.08;">[주제]<br>TOP 5</div>
+    <div style="width:200px;height:14px;background:#FF8A28;"></div>
+    <div style="font-size:46px;line-height:1.5;color:#9FB4CF;">1위는 진짜 예상 못 합니다</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#9FB4CF;flex-shrink:0;border-top:2px solid #2B4A73;padding-top:26px;">
+    <div>@계정명</div>
+    <div>01 / 07</div>
+  </div>
+
+</div>
+</div></div><figcaption>표지</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#0F2340;color:#FFFFFF;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#FF8A28;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#9FB4CF;">랭킹</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:flex;align-items:baseline;gap:28px;">
+      <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:150px;line-height:1;color:#FF8A28;">3</div>
+      <div style="font-size:54px;font-weight:700;line-height:1.25;">[항목 이름]</div>
+    </div>
+    <div style="height:380px;background:#1B3358;border:3px dashed #2B4A73;display:flex;align-items:center;justify-content:center;font-size:34px;color:#9FB4CF;">이미지 자리</div>
+    <div style="font-size:40px;line-height:1.55;color:#9FB4CF;">[왜 이 순위인지 두 줄.<br>숫자나 사실 하나는 꼭 넣습니다]</div>
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-top:8px;">
+      <div style="font-size:30px;font-weight:600;color:#9FB4CF;">2위부터가 진짜</div>
+      <div style="font-size:34px;font-weight:700;color:#FF8A28;">&#8594;</div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#9FB4CF;flex-shrink:0;border-top:2px solid #2B4A73;padding-top:26px;">
+    <div>@계정명</div>
+    <div>04 / 07</div>
+  </div>
+
+</div>
+</div></div><figcaption>본문</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#FF8A28;color:#17130C;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#17130C;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:rgba(23,19,12,0.72);">랭킹</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:112px;line-height:1.14;">[1위를 암시하는<br>한 줄]</div>
+    <div style="width:200px;height:14px;background:#17130C;"></div>
+    <div style="font-size:44px;line-height:1.5;color:rgba(23,19,12,0.72);">[다음 장에서 밝힙니다]</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:rgba(23,19,12,0.72);flex-shrink:0;border-top:2px solid rgba(23,19,12,0.28);padding-top:26px;">
+    <div>@계정명</div>
+    <div>06 / 07</div>
+  </div>
+
+</div>
+</div></div><figcaption>강조 (색반전)</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#0F2340;color:#FFFFFF;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#FF8A28;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#9FB4CF;">랭킹</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#FF8A28;color:#17130C;font-size:34px;font-weight:700;padding:16px 32px;">1위</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:110px;line-height:1.1;">[1위 항목]</div>
+    <div style="background:#1B3358;padding:44px;font-size:40px;line-height:1.6;">[1위인 이유를 세 줄로.<br>여기서 가장 강한 사실 하나를<br>터뜨립니다]</div>
+    <div style="background:#FF8A28;color:#17130C;padding:40px;font-size:44px;font-weight:700;line-height:1.4;">다음 편은 [다음 주제]<br>팔로우하고 기다리세요</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#9FB4CF;flex-shrink:0;border-top:2px solid #2B4A73;padding-top:26px;">
+    <div>@계정명</div>
+    <div>07 / 07</div>
+  </div>
+
+</div>
+</div></div><figcaption>마무리</figcaption></figure>
+</div>
+<h2>제작물 — 결혼식 축의금 10장</h2><div class="row">
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#B0202B;color:#FFFFFF;font-size:34px;font-weight:700;padding:16px 32px;">축의금 총정리</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:132px;line-height:1.08;">결혼식 축의금<br>딱 정해줄게</div>
+    <div style="width:200px;height:14px;background:#B0202B;"></div>
+    <div style="font-size:46px;line-height:1.5;color:#6A6154;">봉투 앞에서 매번 5분씩 고민했다면<br>이 10장으로 끝납니다</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>01 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>01 표지</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-size:44px;line-height:1.5;color:#6A6154;">청첩장 받고 제일 먼저 드는 생각</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:150px;line-height:1.1;">얼마 넣지…</div>
+    <div style="background:#FFFFFF;padding:48px;font-size:42px;line-height:1.6;">
+      많이 내면 아깝고<br>적게 내면 눈치 보이고.<br>
+      <span style="color:#B0202B;font-weight:700;">매번 검색하는 데는 이유가 있습니다.</span>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>02 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>02</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:92px;line-height:1.18;">축의금은 사실<br>두 가지로 다 정해집니다</div>
+    <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:28px;">
+      <div style="background:#FFFFFF;padding:40px;display:flex;flex-direction:column;gap:18px;">
+        <div style="font-size:56px;font-weight:700;color:#B0202B;">1</div>
+        <div style="font-size:44px;font-weight:700;line-height:1.35;">얼마나<br>친한 사이인가</div>
+      </div>
+      <div style="background:#FFFFFF;padding:40px;display:flex;flex-direction:column;gap:18px;">
+        <div style="font-size:56px;font-weight:700;color:#B0202B;">2</div>
+        <div style="font-size:44px;font-weight:700;line-height:1.35;">가서<br>밥을 먹고 오는가</div>
+      </div>
+    </div>
+    <div style="font-size:42px;line-height:1.55;color:#6A6154;">이 둘만 맞추면 금액은 거의 자동으로 나옵니다.</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>03 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>03</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#B0202B;color:#FFFFFF;font-size:32px;font-weight:700;padding:14px 28px;">참석 안 함 · 봉투만</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.03em;font-size:180px;line-height:1;">5만원</div>
+    <div style="background:#FFFFFF;padding:44px;display:flex;flex-direction:column;gap:22px;">
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">못 가고 계좌로만 보낼 때</div>
+      <div style="height:2px;background:#DDD2BF;"></div>
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">이름 정도만 아는 사이</div>
+    </div>
+    <div style="font-size:42px;line-height:1.55;color:#6A6154;">안 가면 식대가 나가지 않습니다.<br>그래서 5만원이 기본선입니다.</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>04 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>04</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#B0202B;color:#FFFFFF;font-size:32px;font-weight:700;padding:14px 28px;">참석함 · 보통 사이</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.03em;font-size:180px;line-height:1;">10만원</div>
+    <div style="background:#FFFFFF;padding:44px;display:flex;flex-direction:column;gap:22px;">
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">같은 팀 직장 동료</div>
+      <div style="height:2px;background:#DDD2BF;"></div>
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">가끔 보는 동네 지인</div>
+    </div>
+    <div style="font-size:42px;line-height:1.55;color:#6A6154;">가서 밥을 먹는 순간 계산이 달라집니다.<br><span style="color:#B0202B;font-weight:700;">식대는 넘겨야 민폐가 아닙니다.</span></div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>05 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>05</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#B0202B;color:#FFFFFF;font-size:32px;font-weight:700;padding:14px 28px;">참석함 · 친한 사이</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.03em;font-size:180px;line-height:1;">20만원</div>
+    <div style="background:#FFFFFF;padding:44px;display:flex;flex-direction:column;gap:22px;">
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">자주 연락하는 친한 친구</div>
+      <div style="height:2px;background:#DDD2BF;"></div>
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">몇 년째 붙어 지낸 동료</div>
+    </div>
+    <div style="font-size:42px;line-height:1.55;color:#6A6154;">기준은 하나입니다.<br>내 결혼식에 올 사람이면 이 구간.</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>06 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>06</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="display:inline-flex;align-self:flex-start;background:#B0202B;color:#FFFFFF;font-size:32px;font-weight:700;padding:14px 28px;">절친 · 가족 · 가까운 친척</div>
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.03em;font-size:180px;line-height:1;">30만원~</div>
+    <div style="background:#FFFFFF;padding:44px;display:flex;flex-direction:column;gap:22px;">
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">10년 이상 본 절친</div>
+      <div style="height:2px;background:#DDD2BF;"></div>
+      <div style="font-size:42px;line-height:1.4;font-weight:600;">형제자매 · 사촌</div>
+    </div>
+    <div style="font-size:42px;line-height:1.55;color:#6A6154;">여기서부터는 기준이 아니라 마음입니다.<br>대신 내 차례에 그대로 돌아옵니다.</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>07 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>07</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:96px;line-height:1.16;">이 경우엔<br>한 칸 올려야 합니다</div>
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div style="background:#FFFFFF;padding:34px 40px;font-size:42px;font-weight:600;">호텔에서 하는 예식</div>
+      <div style="background:#FFFFFF;padding:34px 40px;font-size:42px;font-weight:600;">뷔페가 아니라 코스로 나오는 곳</div>
+      <div style="background:#FFFFFF;padding:34px 40px;font-size:42px;font-weight:600;">동반 1인을 데리고 갈 때</div>
+    </div>
+    <div style="font-size:42px;line-height:1.55;color:#6A6154;"><span style="color:#B0202B;font-weight:700;">식대보다 적게 낸 봉투가 제일 티 납니다.</span></div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>08 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>08</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:96px;line-height:1.16;">왜 항상<br>3·5·7·10만원일까</div>
+    <div style="background:#FFFFFF;padding:44px;font-size:42px;line-height:1.6;">
+      홀수는 딱 나눠지지 않습니다.<br>
+      인연이 갈라지지 말라는 뜻으로<br>
+      짝수를 피해 온 관습입니다.
+    </div>
+    <div style="display:flex;align-items:center;gap:24px;">
+      <div style="background:#B0202B;color:#FFFFFF;font-size:36px;font-weight:700;padding:18px 30px;">예외</div>
+      <div style="font-size:40px;line-height:1.4;">10만원은 꽉 찬 수라 괜찮습니다</div>
+    </div>
+    <div style="font-size:40px;line-height:1.5;color:#6A6154;">4·6·8만원은 굳이 쓰지 않습니다</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>09 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>09</figcaption></figure>
+<figure><div class="frame"><div class="inner">
+<div style="width:1080px;height:1350px;box-sizing:border-box;background:#F2ECE1;color:#16130E;display:flex;flex-direction:column;padding:90px 80px 100px;font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:18px;flex-shrink:0;">
+    <div style="width:18px;height:18px;background:#B0202B;"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:0.14em;color:#6A6154;">현실 기준</div>
+  </div>
+
+  <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:56px 0;">
+    <div style="font-family:'Black Han Sans','Malgun Gothic',sans-serif;font-weight:400;letter-spacing:-0.02em;font-size:88px;line-height:1.16;">한 장 요약</div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;align-items:center;gap:24px;background:#FFFFFF;padding:28px 36px;">
+        <div style="font-size:52px;font-weight:700;color:#B0202B;min-width:250px;">5만원</div>
+        <div style="font-size:38px;line-height:1.35;">안 가고 봉투만</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;background:#FFFFFF;padding:28px 36px;">
+        <div style="font-size:52px;font-weight:700;color:#B0202B;min-width:250px;">10만원</div>
+        <div style="font-size:38px;line-height:1.35;">참석하는 동료·지인</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;background:#FFFFFF;padding:28px 36px;">
+        <div style="font-size:52px;font-weight:700;color:#B0202B;min-width:250px;">20만원</div>
+        <div style="font-size:38px;line-height:1.35;">친한 친구</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;background:#FFFFFF;padding:28px 36px;">
+        <div style="font-size:52px;font-weight:700;color:#B0202B;min-width:250px;">30만원~</div>
+        <div style="font-size:38px;line-height:1.35;">절친·가족</div>
+      </div>
+    </div>
+    <div style="background:#B0202B;color:#FFFFFF;padding:40px;font-size:44px;font-weight:700;line-height:1.4;">봉투 앞에서 꺼내볼 수 있게<br>저장해두세요</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:500;color:#6A6154;flex-shrink:0;border-top:2px solid #DDD2BF;padding-top:26px;">
+    <div>@계정명</div>
+    <div>10 / 10</div>
+  </div>
+
+</div>
+</div></div><figcaption>10</figcaption></figure>
+</div>
+</body></html>
