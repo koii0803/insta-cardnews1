@@ -79,6 +79,8 @@ def 전송(폴더):
         Image.open(png).convert("RGB").save(buf, "JPEG", quality=85)
         images.append({"name": png.stem + ".jpg",
                        "data": base64.b64encode(buf.getvalue()).decode()})
+    if not images:
+        return "보낼 JPEG가 없음 (PNG 촬영 결과 없음)"
     body = json.dumps({"caption": 캡션, "count": len(images), "images": images}).encode()
     if len(body) > 4_500_000:
         return f"전송 용량 초과 ({len(body)//1_000_000}MB). 카드 수를 줄여야 함"
