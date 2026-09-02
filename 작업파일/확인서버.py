@@ -244,7 +244,19 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+def 내_주소():
+    # 같은 와이파이의 폰에서 접속할 때 쓸 PC 주소
+    import socket
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        return s.getsockname()[0]
+    except Exception:
+        return "PC-IP"
+
+
 if __name__ == "__main__":
     webbrowser.open(f"http://localhost:{PORT}/")
     print("전체확인 화면을 브라우저에 띄웠다. 확인이 끝나면 이 검은 창은 닫아라.")
-    http.server.ThreadingHTTPServer(("localhost", PORT), Handler).serve_forever()
+    print(f"폰(같은 와이파이)에서는 브라우저에 이 주소:  http://{내_주소()}:{PORT}/")
+    http.server.ThreadingHTTPServer(("0.0.0.0", PORT), Handler).serve_forever()
