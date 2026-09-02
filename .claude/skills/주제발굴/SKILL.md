@@ -86,24 +86,60 @@ description: 인스타 카드뉴스 주제 발굴. 커뮤니티·유튜브·웹�
 상태 확인 3종(발행대장.txt · 주제풀.txt · 제작/ 폴더 이름)은 → 지침 스킬 3절(방 시작 루틴)을 보고 해라.
 이 셋과 같거나 비슷한 주제는 수집 단계에서 바로 버린다.
 
-## 1. 발굴처
+## 1. 발굴처 — 유머·정보·셀럽·뉴스 다 한다. 한 종류만 파지 마라
 
-| 발굴처 | 링크 / 방법 |
-|---|---|
-| 네이트판 랭킹 | https://pann.nate.com/talk/ranking |
-| 디시 실시간베스트 | https://gall.dcinside.com/board/lists/?id=dcbest |
-| 더쿠 스퀘어 | https://theqoo.net/square |
-| 블라인드 | https://www.teamblind.com/kr/ |
-| 캐릿 | https://www.careet.net/ |
-| 대학내일 | https://www.univ20.com/ |
-| 오픈애즈 | https://www.openads.co.kr/ |
-| 구글 트렌드 | https://trends.google.co.kr/trending?geo=KR&hl=ko |
-| 유튜브 | 인기급상승 탭. 제목 + 조회수 |
-| 웹검색 | 정부 지원금·정책·마감 임박 혜택 전용 |
+**통로부터 맞춰라.** 통로가 틀리면 빈 페이지가 오고 토큰만 든다. 표에 적힌 통로로만 연다.
+- 웹조회 = WebFetch (글만 읽음)
+- 브라우저 = 앱 안 브라우저 (자바스크립트가 있어야 내용이 뜨는 곳)
+- curl = 원시 HTML (네이버 계열은 이것만 됨. 브라우저·웹조회는 정책 차단)
+
+| 종류 | 발굴처 | 링크 | 통로 |
+|---|---|---|---|
+| 셀럽·유머 | 네이트판 랭킹 | https://pann.nate.com/talk/ranking | 웹조회 |
+| 셀럽·유머 | 디시 실시간베스트 | https://gall.dcinside.com/board/lists/?id=dcbest | 웹조회 |
+| 셀럽·유머 | 더쿠 스퀘어 | https://theqoo.net/square | 웹조회 |
+| 셀럽·유머·직장인썰 | 인스티즈 (블라인드 재업 글은 여기서) | https://www.instiz.net | 브라우저 |
+| 유머·돈썰 | 스레드 (로그인 없이 읽힘) | https://www.threads.net | 브라우저 |
+| 정보(돈) | 뽐뿌 재테크포럼 | https://www.ppomppu.co.kr/zboard/zboard.php?id=money | 웹조회 |
+| 정보(돈)·직장인 | 클리앙 모두의공원 | https://www.clien.net/service/board/park | 웹조회 |
+| 돈썰 | MLB파크 불펜 | https://mlbpark.donga.com/mp/b.php?b=bullpen | 웹조회 |
+| 유머·돈 | 에펨코리아 경제 | https://www.fmkorea.com/economy | 웹조회 |
+| 정보(돈) | 디시 주식갤 | https://gall.dcinside.com/board/lists?id=stock_new2 | 웹조회 |
+| 정보(질문 그대로 = 제목 후보) | 국세상담센터 FAQ | https://call.nts.go.kr | 브라우저 |
+| 정보(무명 지갑) | 금감원 | https://www.fss.or.kr | 웹조회 |
+| 정보 | 국민연금 | https://www.nps.or.kr | 웹조회 |
+| 정보(질문 그대로) | 국민신문고 FAQ | https://www.epeople.go.kr | 브라우저 |
+| 뉴스·트렌드 | 캐릿 | https://www.careet.net/ | 웹조회 |
+| 뉴스·트렌드 | 대학내일 | https://www.univ20.com/ | 웹조회 |
+| 뉴스·트렌드 | 오픈애즈 | https://www.openads.co.kr/ | 웹조회 |
+| 뉴스·트렌드 | 구글 트렌드 | https://trends.google.co.kr/trending?geo=KR&hl=ko | 웹조회 |
+| 뉴스·셀럽 | 유튜브 인기급상승 | 제목 + 조회수 | 브라우저 |
+| 생활·집 | 오늘의집 | https://ohou.se | 브라우저 |
+| 시각 소재 | 핀터레스트 | https://www.pinterest.co.kr | 웹조회 |
+| 혜택 | 웹검색 | 정부 지원금·정책·마감 임박 혜택 전용 | — |
+
+**출처 확인처 (3절 팩트 게이트용 — 발굴처 아님, 확인용)**
+
+| 분야 | 곳 | 링크 | 통로 |
+|---|---|---|---|
+| 건강 | 질병관리청 | https://www.kdca.go.kr | 브라우저 |
+| 건강 | 식약처 | https://www.mfds.go.kr | 웹조회 |
+| 건강(언론, 글만. 사진 금지) | 헬스조선 / 코메디닷컴 / 하이닥 | https://health.chosun.com / https://kormedi.com / https://www.hidoc.co.kr | 웹조회 |
+| 건강(논문) | PubMed | https://pubmed.ncbi.nlm.nih.gov | 웹조회 |
+| 돈·세금 | 국세상담센터 / 금감원 / 국민연금 | 위 표와 같음 | 위 표와 같음 |
+
+**흔함 킬 체크 도구 (통과 근거 말고 탈락 증거 찾을 때)**
+
+| 곳 | 링크 | 통로 | 읽는 법 |
+|---|---|---|---|
+| 지식iN 최신순 | https://kin.naver.com | curl만 | 답변 0개 질문 쌓여 있음 = 궁금한데 아무도 정리 안 함 (통과 쪽 증거) |
+| 네이버 데이터랩 | https://datalab.naver.com | curl만 | 검색량 이미 큼 = 흔함 (탈락 쪽 증거) |
+
+**안 되는 곳 (열지 마라):** 블라인드(로그인 벽 → 인스티즈·더쿠 재업으로), 블랙키위(로그인 벽), 네이버연예(차단)
 
 - 제목 위주로 수집한다. 디테일한 내용이 보이면 같이 가져와도 된다.
 - 조회수를 같이 받는다. 로그인 벽 등으로 못 받으면 억지로 파지 않는다 (아래 4번 규칙으로 처리).
-- 접속 자체가 안 되는 발굴처는 건너뛰고 `오류기록.txt`에 한 줄 적는다.
+- 표에 없는 곳이 안 열리면 건너뛰고 `오류기록.txt`에 한 줄 적는다.
 
 ## 2. AI 소재 (매 회차 1~2건)
 
