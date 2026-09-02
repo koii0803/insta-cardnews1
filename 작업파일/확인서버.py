@@ -72,7 +72,12 @@ def 촬영(폴더):
 def 전송(폴더):
     # PNG → JPEG(인스타 API는 JPEG만 받음) → base64 → Make 웹훅으로 한 번에 보낸다.
     # 성공하면 None, 실패하면 이유 문자열
-    캡션 = (폴더 / "캡션.txt").read_text(encoding="utf-8").strip()
+    if not (폴더 / "캡션.txt").exists():
+        return "캡션.txt 없음 → 캡션작성 먼저"
+    # [대체텍스트] 줄은 인스타 캡션에 들어가면 안 되므로 뺀다
+    캡션 = "
+".join(l for l in (폴더 / "캡션.txt").read_text(encoding="utf-8").splitlines()
+                     if not l.startswith("[대체텍스트]")).strip()
     images = []
     for png in sorted(폴더.glob("카드*.png")):
         buf = io.BytesIO()
@@ -220,6 +225,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             msg = f"폐기 완료 → 제작/폐기/{폴더.name}"
         elif act == "발행" and not list(폴더.glob("카드*.html")):
             msg = "이 폴더엔 발행할 카드가 없습니다 (옛 형식). 폐기하거나 다시 제작하세요"
+        elif act == "발행" and not (폴더 / "캡션.txt").exists():
+            msg = "캡션.txt가 없어서 발행 못 함. 캡션작성 먼저"
         elif act == "발행":
             실패 = 촬영(폴더)
             if 실패:
