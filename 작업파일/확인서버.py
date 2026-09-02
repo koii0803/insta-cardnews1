@@ -2,23 +2,29 @@
 # 하는 일: 제작/ 안의 모든 폴더(폐기 제외)를 한 화면에 띄우고,
 # 건별 폐기/발행 버튼의 실제 동작을 처리한다.
 #   폐기 = 그 폴더를 제작/폐기/ 로 이동
-#   발행 = 그 폴더의 카드 전부 PNG 촬영(실패 시 2회 재시도) + 발행대장.txt 한 줄
+#   발행 = 그 폴더의 카드 전부 PNG 촬영(실패 시 2회 재시도) → JPEG 변환 → Make 웹훅 전송(인스타 자동 게시) + 발행대장.txt 한 줄
 
+import base64
 import html
 import http.server
+import io
 import json
 import re
 import shutil
 import subprocess
 import urllib.parse
+import urllib.request
 import webbrowser
 from datetime import date
 from pathlib import Path
+
+from PIL import Image
 
 PORT = 8765
 CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 ROOT = Path(__file__).resolve().parent.parent
 제작 = ROOT / "제작"
+웹훅 = (ROOT / "작업파일" / "webhook.txt").read_text(encoding="utf-8").strip()
 
 
 def 폴더들():
@@ -61,6 +67,29 @@ def 촬영(폴더):
         if not ok:
             실패.append(h.name)
     return 실패
+
+
+def 전송(폴더):
+    # PNG → JPEG(인스타 API는 JPEG만 받음) → base64 → Make 웹훅으로 한 번에 보낸다.
+    # 성공하면 None, 실패하면 이유 문자열
+    캡션 = (폴더 / "캡션.txt").read_text(encoding="utf-8").strip()
+    images = []
+    for png in sorted(폴더.glob("카드*.png")):
+        buf = io.BytesIO()
+        Image.open(png).convert("RGB").save(buf, "JPEG", quality=85)
+        images.append({"name": png.stem + ".jpg",
+                       "data": base64.b64encode(buf.getvalue()).decode()})
+    body = json.dumps({"caption": 캡션, "count": len(images), "images": images}).encode()
+    if len(body) > 4_500_000:
+        return f"전송 용량 초과 ({len(body)//1_000_000}MB). 카드 수를 줄여야 함"
+    req = urllib.request.Request(웹훅, body, {"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            if r.status != 200:
+                return f"Make 응답 {r.status}"
+    except Exception as e:
+        return f"Make 전송 실패: {e}"
+    return None
 
 
 def 대시보드():
