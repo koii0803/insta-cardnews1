@@ -75,9 +75,8 @@ def 전송(폴더):
     if not (폴더 / "캡션.txt").exists():
         return "캡션.txt 없음 → 캡션작성 먼저"
     # [대체텍스트] 줄은 인스타 캡션에 들어가면 안 되므로 뺀다
-    캡션 = "
-".join(l for l in (폴더 / "캡션.txt").read_text(encoding="utf-8").splitlines()
-                     if not l.startswith("[대체텍스트]")).strip()
+    줄들 = (폴더 / "캡션.txt").read_text(encoding="utf-8").splitlines()
+    캡션 = chr(10).join(l for l in 줄들 if not l.startswith("[대체텍스트]")).strip()
     images = []
     for png in sorted(폴더.glob("카드*.png")):
         buf = io.BytesIO()
