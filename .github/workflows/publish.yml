@@ -1,0 +1,25 @@
+# 깃허브 예약발행 — 10분마다 깨어나 깃허브예약.json의 시간 지난 건을 발행한다.
+# PC가 꺼져 있어도 돈다. 웹훅 주소는 저장소 Settings → Secrets → MAKE_WEBHOOK 에 등록.
+name: scheduled-publish
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: 예약 확인·발행
+        env:
+          MAKE_WEBHOOK: ${{ secrets.MAKE_WEBHOOK }}
+        run: python 작업파일/깃허브발행.py
+      - name: 결과 커밋 (발행대장·예약 정리)
+        run: |
+          git config user.name "scheduled-publish"
+          git config user.email "actions@users.noreply.github.com"
+          git add 깃허브예약.json 발행대장.txt 오류기록.txt
+          git diff --cached --quiet || (git commit -m "깃허브 예약발행 실행" && git push)
