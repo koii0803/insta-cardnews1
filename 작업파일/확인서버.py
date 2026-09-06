@@ -363,8 +363,10 @@ def 대시보드():
   .cal .ev {{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
   .cal .pend {{ color:#B26A00; font-weight:700; }}
   .cal .done {{ color:#0E7C86; }}
-  .donebox {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:14px 20px; margin-top:20px; }}
+  .donebox {{ background:#E8ECEF; border:1px solid #C5CCD3; border-radius:10px; padding:14px 20px; margin-top:20px; }}
   .donebox summary {{ cursor:pointer; font-size:16px; font-weight:700; }}
+  #donearea .set {{ background:#F4F1E8; border-color:#D8D2BE; opacity:1; }}
+  #donearea .set h2::after {{ content:" ✔ 처리됨"; color:#8A7B4F; font-size:14px; }}
   .set .delete {{ display:none; background:#C0392B; color:#FFF; }}
   #donearea .set .delete {{ display:inline-block; }}
   .hint {{ background:#FFF; border:1px solid #DDD; padding:14px 20px; font-size:16px; line-height:1.8; }}
