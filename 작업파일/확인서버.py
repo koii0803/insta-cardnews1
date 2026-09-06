@@ -5,6 +5,7 @@
 #   발행 = 그 폴더의 카드 전부 PNG 촬영(실패 시 2회 재시도) → JPEG 변환 → Make 웹훅 전송(인스타 자동 게시) + 발행대장.txt 한 줄
 
 import base64
+import calendar
 import html
 import http.server
 import io
@@ -170,11 +171,11 @@ def 깃푸시():
     return 깃("push")
 
 
-def 깃헙현황():
-    # 깃허브 쪽 장부를 읽어 예약 현황판 줄들을 만든다 (⏳ 대기중 / ✅ 발행됨 / ❌ 실패)
+def 원격장부():
+    # 깃허브 쪽 장부(예약큐·발행대장·오류기록)를 받아온다. 연결 실패면 None
     code, _ = 깃("fetch", "--quiet", "origin", "main")
     if code != 0:
-        return ["깃허브 연결 안 됨 — 깃헙예약 상태 확인 불가"]
+        return None
 
     def 원격(파일):
         c, out = 깃("show", f"origin/main:{파일}")
@@ -184,10 +185,46 @@ def 깃헙현황():
         큐 = json.loads(원격("깃허브예약.json"))
     except Exception:
         큐 = []
-    줄 = [f"⏳ 대기중 {x['time'].replace('T', ' ')} — {x['folder'].split('_', 1)[-1]}" for x in 큐]
-    줄 += ["✅ " + l for l in 원격("발행대장.txt").splitlines() if "(깃허브예약)" in l][-3:]
-    줄 += ["❌ " + l for l in 원격("오류기록.txt").splitlines() if "깃허브 예약발행" in l][-3:]
+    return {"큐": 큐, "발행": 원격("발행대장.txt").splitlines(),
+            "오류": 원격("오류기록.txt").splitlines()}
+
+
+def 깃헙현황(장부):
+    # 현황판 줄들 (⏳ 대기중 / ✅ 발행됨 / ❌ 실패)
+    if 장부 is None:
+        return ["깃허브 연결 안 됨 — 깃헙예약 상태 확인 불가"]
+    줄 = [f"⏳ 대기중 {x['time'].replace('T', ' ')} — {x['folder'].split('_', 1)[-1]}"
+          for x in 장부["큐"]]
+    줄 += ["✅ " + l for l in 장부["발행"] if "(깃허브예약)" in l][-3:]
+    줄 += ["❌ " + l for l in 장부["오류"] if "깃허브 예약발행" in l][-3:]
     return 줄 or ["깃헙예약 기록 없음"]
+
+
+def 달력html(행사):
+    # 행사: {"YYYY-MM-DD": [(정렬키, css, 글), ...]} → 이번 달 + 예약 걸린 달의 달력 표
+    오늘 = date.today().isoformat()
+    달들 = {오늘[:7]}
+    달들 |= {날[:7] for 날 in 행사 if 날 >= 오늘}
+    표들 = []
+    for 달 in sorted(달들):
+        년, 월 = int(달[:4]), int(달[5:7])
+        첫요일, 일수 = calendar.monthrange(년, 월)
+        줄, 주 = [], ["<td></td>"] * 첫요일
+        for 일 in range(1, 일수 + 1):
+            날 = f"{달}-{일:02d}"
+            내용 = "".join(f'<span class="ev {css}">{html.escape(글)}</span>'
+                           for _, css, 글 in sorted(행사.get(날, [])))
+            주.append(f'<td class="{"today" if 날 == 오늘 else ""}">'
+                      f'<span class="day">{일}</span>{내용}</td>')
+            if len(주) == 7:
+                줄.append("<tr>" + "".join(주) + "</tr>")
+                주 = []
+        if 주:
+            줄.append("<tr>" + "".join(주 + ["<td></td>"] * (7 - len(주))) + "</tr>")
+        표들.append(f"<h3>{년}년 {월}월</h3><table><tr>"
+                    + "".join(f"<th>{요일}</th>" for 요일 in "월화수목금토일")
+                    + "</tr>" + "".join(줄) + "</table>")
+    return "".join(표들)
 
 
 def 깃허브예약등록(폴더, t):
@@ -263,9 +300,27 @@ def 대시보드():
 
     개수 = len(부분)
     본문 = "\n".join(부분) if 부분 else "<p>확인할 건이 없습니다.</p>"
+    장부 = 원격장부()
     현황 = [f"⏳ 대기중 {x['time'].replace('T', ' ')} — {x['folder'].split('_', 1)[-1]} (PC예약)"
-            for x in 예약목록()] + 깃헙현황()
+            for x in 예약목록()] + 깃헙현황(장부)
     현황판 = "<br>".join(html.escape(l) for l in 현황)
+
+    행사 = {}
+    for x in 예약목록() + (장부["큐"] if 장부 else 깃큐목록()):
+        날, 시간 = x["time"].split("T")
+        행사.setdefault(날, []).append((시간, "pend", f"⏳{시간} {x['folder'].split('_', 1)[-1]}"))
+    if 장부:
+        발행줄 = 장부["발행"]
+    else:
+        try:
+            발행줄 = (ROOT / "발행대장.txt").read_text(encoding="utf-8").splitlines()
+        except Exception:
+            발행줄 = []
+    for l in 발행줄:
+        m = re.match(r"(\d{4}-\d{2}-\d{2}) (?:\[[^\]]*\] )?(.+)", l)
+        if m:
+            행사.setdefault(m.group(1), []).append(("", "done", "✅" + m.group(2)))
+    달력 = 달력html(행사)
     return f"""<!doctype html>
 <html>
 <head>
@@ -278,6 +333,17 @@ def 대시보드():
   .topbar {{ display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; }}
   .board {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:12px 18px; font-size:14px; line-height:1.9; min-width:300px; }}
   .board b {{ font-size:15px; }}
+  .cal {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:6px 20px 18px; margin-top:20px; }}
+  .cal h3 {{ font-size:17px; margin:14px 0 8px; }}
+  .cal table {{ border-collapse:collapse; width:100%; table-layout:fixed; }}
+  .cal th {{ font-size:13px; color:#667; font-weight:400; padding:4px; }}
+  .cal td {{ border:1px solid #E2E4E8; vertical-align:top; height:56px; padding:3px 6px; font-size:12px; }}
+  .cal .day {{ display:block; font-weight:700; color:#99A; }}
+  .cal .today {{ background:#EAF6F7; }}
+  .cal .today .day {{ color:#0E7C86; }}
+  .cal .ev {{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
+  .cal .pend {{ color:#B26A00; font-weight:700; }}
+  .cal .done {{ color:#0E7C86; }}
   .hint {{ background:#FFF; border:1px solid #DDD; padding:14px 20px; font-size:16px; line-height:1.8; }}
   .set {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:20px; margin:24px 0; }}
   .set.done {{ opacity:0.45; }}
@@ -305,6 +371,7 @@ def 대시보드():
   </div>
   <div class="hint">위에서부터 보면서 건마다 폐기 또는 발행을 누르면 됩니다.<br>
   확인할 것: 오탈자 / 글자 잘림 / 사진 어울림 / 마감일. 폐기는 바로 안 지워지고 제작/폐기/ 로 이동합니다.</div>
+  <div class="cal">{달력}</div>
   {본문}
 </div>
 <script>
