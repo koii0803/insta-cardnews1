@@ -148,6 +148,17 @@ def 예약실행(항목):
         (ROOT / "오류기록.txt").open("a", encoding="utf-8").write(기록)
 
 
+숨김파일 = ROOT / "숨김목록.json"
+
+
+def 숨김목록():
+    # 화면에서만 숨긴 폴더 이름들. 파일·발행에는 영향 없음
+    try:
+        return json.loads(숨김파일.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+
 깃큐파일 = ROOT / "깃허브예약.json"
 
 
@@ -259,12 +270,24 @@ def 예약감시():
 
 
 def 대시보드():
-    부분 = []
+    장부 = 원격장부()
+    if 장부:
+        발행줄 = 장부["발행"]
+    else:
+        try:
+            발행줄 = (ROOT / "발행대장.txt").read_text(encoding="utf-8").splitlines()
+        except Exception:
+            발행줄 = []
+
+    부분, 처리부분 = [], []
+    숨김 = 숨김목록()
     예약중 = {x["folder"]: "PC예약: " + x["time"].replace("T", " ") for x in 예약목록()}
-    for x in 깃큐목록():
+    for x in (장부["큐"] if 장부 else 깃큐목록()):
         예약중[x["folder"]] = "깃헙예약: " + x["time"].replace("T", " ")
     for 폴더 in 폴더들():
         이름 = 폴더.name
+        if 이름 in 숨김:
+            continue
         제목 = 이름.split("_", 1)[-1]
         카드 = sorted(폴더.glob("카드*.html"))
         try:
@@ -280,7 +303,7 @@ def 대시보드():
         틀 = "".join(
             f'<div class="card"><iframe loading="lazy" src="{urllib.parse.quote(이름)}/{c.name}"></iframe></div>'
             for c in 카드)
-        부분.append(f"""
+        조각 = f"""
 <section class="set" data-folder="{html.escape(이름)}" data-deadline="{html.escape(마감 or '')}">
   <h2>{html.escape(제목)} <small>({카테고리(폴더)}, {len(카드)}장)</small> {마감표시}</h2>
   <div class="tag">{html.escape(실험)}</div>
@@ -294,13 +317,16 @@ def 대시보드():
     <button class="ghschedule">깃헙예약</button>
     <span class="booked">{html.escape(예약중.get(이름, ""))}</span>
     <button class="cancel" {"" if 이름 in 예약중 else "hidden"}>예약취소</button>
+    <button class="delete">삭제</button>
     <span class="result"></span>
   </div>
-</section>""")
+</section>"""
+        처리 = 이름 in 예약중 or any(
+            re.search(rf"\] {re.escape(제목)}( \(|$)", l) for l in 발행줄)
+        (처리부분 if 처리 else 부분).append(조각)
 
     개수 = len(부분)
     본문 = "\n".join(부분) if 부분 else "<p>확인할 건이 없습니다.</p>"
-    장부 = 원격장부()
     현황 = [f"⏳ 대기중 {x['time'].replace('T', ' ')} — {x['folder'].split('_', 1)[-1]} (PC예약)"
             for x in 예약목록()] + 깃헙현황(장부)
     현황판 = "<br>".join(html.escape(l) for l in 현황)
@@ -309,13 +335,6 @@ def 대시보드():
     for x in 예약목록() + (장부["큐"] if 장부 else 깃큐목록()):
         날, 시간 = x["time"].split("T")
         행사.setdefault(날, []).append((시간, "pend", f"⏳{시간} {x['folder'].split('_', 1)[-1]}"))
-    if 장부:
-        발행줄 = 장부["발행"]
-    else:
-        try:
-            발행줄 = (ROOT / "발행대장.txt").read_text(encoding="utf-8").splitlines()
-        except Exception:
-            발행줄 = []
     for l in 발행줄:
         m = re.match(r"(\d{4}-\d{2}-\d{2}) (?:\[[^\]]*\] )?(.+)", l)
         if m:
@@ -344,6 +363,10 @@ def 대시보드():
   .cal .ev {{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
   .cal .pend {{ color:#B26A00; font-weight:700; }}
   .cal .done {{ color:#0E7C86; }}
+  .donebox {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:14px 20px; margin-top:20px; }}
+  .donebox summary {{ cursor:pointer; font-size:16px; font-weight:700; }}
+  .set .delete {{ display:none; background:#C0392B; color:#FFF; }}
+  #donearea .set .delete {{ display:inline-block; }}
   .hint {{ background:#FFF; border:1px solid #DDD; padding:14px 20px; font-size:16px; line-height:1.8; }}
   .set {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:20px; margin:24px 0; }}
   .set.done {{ opacity:0.45; }}
@@ -372,36 +395,53 @@ def 대시보드():
   <div class="hint">위에서부터 보면서 건마다 폐기 또는 발행을 누르면 됩니다.<br>
   확인할 것: 오탈자 / 글자 잘림 / 사진 어울림 / 마감일. 폐기는 바로 안 지워지고 제작/폐기/ 로 이동합니다.</div>
   <div class="cal">{달력}</div>
+  <details class="donebox">
+    <summary id="donesum">처리된 항목 {len(처리부분)}건 — 발행·예약된 것 (누르면 펼침)</summary>
+    <div id="donearea">{"".join(처리부분)}</div>
+  </details>
   {본문}
 </div>
 <script>
+const donearea = document.getElementById("donearea");
+const donesum = document.getElementById("donesum");
+function 처리개수갱신() {{
+  donesum.textContent = "처리된 항목 " + donearea.querySelectorAll(".set").length +
+    "건 — 발행·예약된 것 (누르면 펼침)";
+}}
 document.querySelectorAll(".set").forEach(set => {{
   const folder = set.dataset.folder;
   const deadline = set.dataset.deadline;
   const result = set.querySelector(".result");
-  function send(action, extra, keep) {{
+  function send(action, extra, keep, 성공후) {{
     result.textContent = "처리 중…";
     fetch("/", {{ method: "POST", body: JSON.stringify(Object.assign({{ folder, action }}, extra || {{}})) }})
       .then(r => r.json())
-      .then(d => {{ result.textContent = d.msg; if (!keep) set.classList.add("done"); }})
+      .then(d => {{
+        result.textContent = d.msg;
+        if (!keep) set.classList.add("done");
+        if (d.ok && 성공후) {{ 성공후(); 처리개수갱신(); }}
+      }})
       .catch(() => alert("서버 연결이 끊겼습니다. 전체확인열기.bat 로 다시 여세요."));
   }}
+  const 상자로 = () => donearea.appendChild(set);
   set.querySelector(".discard").onclick = () => {{
     if (confirm(folder + "\\n정말 폐기할까? (제작/폐기/ 로 이동)")) send("폐기");
   }};
   set.querySelector(".publish").onclick = () => {{
     if (deadline && new Date().toISOString().slice(0, 10) > deadline &&
         !confirm("경고: 마감일(" + deadline + ")이 지났다. 그래도 발행할까?")) return;
-    send("발행");
+    send("발행", null, false, 상자로);
   }};
   function reserve(action, label) {{
     const t = set.querySelector(".when").value;
     if (!t) {{ alert("예약 시간을 먼저 고르세요."); return; }}
     if (deadline && t.slice(0, 10) > deadline &&
         !confirm("경고: 예약 시각이 마감일(" + deadline + ") 뒤다. 그래도 예약할까?")) return;
-    send(action, {{ time: t }}, true);
-    set.querySelector(".booked").textContent = label + ": " + t.replace("T", " ");
-    set.querySelector(".cancel").hidden = false;
+    send(action, {{ time: t }}, true, () => {{
+      set.querySelector(".booked").textContent = label + ": " + t.replace("T", " ");
+      set.querySelector(".cancel").hidden = false;
+      상자로();
+    }});
   }}
   set.querySelector(".schedule").onclick = () => reserve("예약", "PC예약");
   set.querySelector(".ghschedule").onclick = () => reserve("깃헙예약", "깃헙예약");
@@ -409,6 +449,10 @@ document.querySelectorAll(".set").forEach(set => {{
     send("예약취소", null, true);
     set.querySelector(".booked").textContent = "";
     set.querySelector(".cancel").hidden = true;
+  }};
+  set.querySelector(".delete").onclick = () => {{
+    if (confirm(folder + "\\n화면에서 지울까? (파일·발행에는 영향 없음)"))
+      send("숨김", null, true, () => set.remove());
   }};
 }});
 </script>
@@ -476,6 +520,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 else:
                     msg = (f"깃헙예약됨 → {t.replace('T', ' ')} 무렵 자동 발행 (PC 꺼도 됨). "
                            "깃허브 사정에 따라 몇 분 늦을 수 있음")
+        elif act == "숨김":
+            목록 = 숨김목록()
+            if 폴더.name not in 목록:
+                목록.append(폴더.name)
+            숨김파일.write_text(json.dumps(목록, ensure_ascii=False, indent=1), encoding="utf-8")
+            msg = "화면에서 숨김 (파일은 제작/ 에 그대로)"
         elif act == "예약취소":
             with 예약잠금:
                 예약저장([x for x in 예약목록() if x["folder"] != 폴더.name])
@@ -514,7 +564,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         else:
             msg = "알 수 없는 요청"
 
-        body = json.dumps({"msg": msg}, ensure_ascii=False).encode("utf-8")
+        ok = not any(k in msg for k in
+                     ("실패", "못 함", "이상함", "잘못", "없습니다", "알 수 없는"))
+        body = json.dumps({"msg": msg, "ok": ok}, ensure_ascii=False).encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
