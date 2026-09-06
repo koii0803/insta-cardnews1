@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "카드확인",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8734"],
+      "port": 8734
+    }
+  ]
+}

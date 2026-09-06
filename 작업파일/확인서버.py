@@ -12,10 +12,12 @@ import json
 import re
 import shutil
 import subprocess
+import threading
+import time
 import urllib.parse
 import urllib.request
 import webbrowser
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 from PIL import Image
@@ -32,6 +34,12 @@ def 폴더들():
 
 
 def 카테고리(폴더):
+    try:
+        스펙 = json.loads((폴더 / "카드셋.json").read_text(encoding="utf-8"))
+        if 스펙.get("카테고리"):
+            return 스펙["카테고리"]
+    except Exception:
+        pass
     try:
         first = (폴더 / "대본.txt").read_text(encoding="utf-8").splitlines()[0]
         m = re.search(r"\[(.+?)\]", first)
@@ -98,8 +106,99 @@ def 전송(폴더):
     return None
 
 
+# ── 예약발행 ──────────────────────────────────────────────
+# 예약발행.json 에 [{"folder": 폴더명, "time": "2026-09-06T18:00"}] 형태로 저장.
+# 서버가 20초마다 보고, 시간이 되면 발행 버튼과 똑같은 절차(촬영→전송→발행대장)를 실행한다.
+# 서버가 꺼져 있던 사이 지난 예약은 서버를 다시 켠 순간 바로 실행된다.
+예약파일 = ROOT / "예약발행.json"
+예약잠금 = threading.Lock()
+
+
+def 예약목록():
+    try:
+        return json.loads(예약파일.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+
+def 예약저장(목록):
+    예약파일.write_text(json.dumps(목록, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+def 예약실행(항목):
+    폴더 = 제작 / 항목["folder"]
+    today = date.today().isoformat()
+    if not 폴더.is_dir():
+        기록 = f"{today} 예약발행 취소: {항목['folder']} 폴더 없음(폐기됨?)\n"
+    else:
+        실패 = 촬영(폴더)
+        if 실패:
+            기록 = f"{today} 예약발행 PNG 촬영 실패: {폴더.name} {', '.join(실패)}\n"
+        else:
+            이유 = 전송(폴더)
+            if 이유:
+                기록 = f"{today} 예약발행 전송 실패: {폴더.name} {이유}\n"
+            else:
+                제목 = 폴더.name.split("_", 1)[-1]
+                with (ROOT / "발행대장.txt").open("a", encoding="utf-8") as f:
+                    f.write(f"{today} [{카테고리(폴더)}] {제목}\n")
+                기록 = None
+    if 기록:
+        (ROOT / "오류기록.txt").open("a", encoding="utf-8").write(기록)
+
+
+깃큐파일 = ROOT / "깃허브예약.json"
+
+
+def 깃큐목록():
+    try:
+        return json.loads(깃큐파일.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+
+def 깃(*args):
+    r = subprocess.run(["git", "-C", str(ROOT), *args],
+                       capture_output=True, text=True, timeout=120)
+    return r.returncode, (r.stdout + r.stderr).strip()
+
+
+def 깃허브예약등록(폴더, t):
+    # PNG 촬영 + JPEG 변환 + 예약 기록 + 깃허브 푸시. 성공 None, 실패 이유 문자열
+    실패 = 촬영(폴더)
+    if 실패:
+        return f"PNG 촬영 실패: {', '.join(실패)}"
+    for png in sorted(폴더.glob("카드*.png")):
+        Image.open(png).convert("RGB").save(png.with_suffix(".jpg"), "JPEG", quality=85)
+    목록 = [x for x in 깃큐목록() if x["folder"] != 폴더.name]
+    목록.append({"folder": 폴더.name, "time": t})
+    깃큐파일.write_text(json.dumps(목록, ensure_ascii=False, indent=1), encoding="utf-8")
+    깃("add", "깃허브예약.json", f"제작/{폴더.name}", ".github", "작업파일/깃허브발행.py")
+    깃("commit", "-m", f"깃허브예약: {폴더.name} {t}")
+    code, out = 깃("push")
+    if code != 0:
+        return f"깃허브 푸시 실패 — 저장소 연결부터 필요: {out[:160]}"
+    return None
+
+
+def 예약감시():
+    while True:
+        with 예약잠금:
+            목록 = 예약목록()
+            now = datetime.now().strftime("%Y-%m-%dT%H:%M")
+            실행할 = [x for x in 목록 if x["time"] <= now]
+            if 실행할:
+                예약저장([x for x in 목록 if x["time"] > now])
+        for 항목 in 실행할:
+            예약실행(항목)
+        time.sleep(20)
+
+
 def 대시보드():
     부분 = []
+    예약중 = {x["folder"]: "PC예약: " + x["time"].replace("T", " ") for x in 예약목록()}
+    for x in 깃큐목록():
+        예약중[x["folder"]] = "깃헙예약: " + x["time"].replace("T", " ")
     for 폴더 in 폴더들():
         이름 = 폴더.name
         제목 = 이름.split("_", 1)[-1]
@@ -126,6 +225,11 @@ def 대시보드():
   <div class="rowbtns">
     <button class="discard">폐기</button>
     <button class="publish">발행</button>
+    <input type="datetime-local" class="when">
+    <button class="schedule">PC예약</button>
+    <button class="ghschedule">깃헙예약</button>
+    <span class="booked">{html.escape(예약중.get(이름, ""))}</span>
+    <button class="cancel" {"" if 이름 in 예약중 else "hidden"}>예약취소</button>
     <span class="result"></span>
   </div>
 </section>""")
@@ -172,11 +276,11 @@ document.querySelectorAll(".set").forEach(set => {{
   const folder = set.dataset.folder;
   const deadline = set.dataset.deadline;
   const result = set.querySelector(".result");
-  function send(action) {{
+  function send(action, extra, keep) {{
     result.textContent = "처리 중…";
-    fetch("/", {{ method: "POST", body: JSON.stringify({{ folder, action }}) }})
+    fetch("/", {{ method: "POST", body: JSON.stringify(Object.assign({{ folder, action }}, extra || {{}})) }})
       .then(r => r.json())
-      .then(d => {{ result.textContent = d.msg; set.classList.add("done"); }})
+      .then(d => {{ result.textContent = d.msg; if (!keep) set.classList.add("done"); }})
       .catch(() => alert("서버 연결이 끊겼습니다. 전체확인열기.bat 로 다시 여세요."));
   }}
   set.querySelector(".discard").onclick = () => {{
@@ -186,6 +290,22 @@ document.querySelectorAll(".set").forEach(set => {{
     if (deadline && new Date().toISOString().slice(0, 10) > deadline &&
         !confirm("경고: 마감일(" + deadline + ")이 지났다. 그래도 발행할까?")) return;
     send("발행");
+  }};
+  function reserve(action, label) {{
+    const t = set.querySelector(".when").value;
+    if (!t) {{ alert("예약 시간을 먼저 고르세요."); return; }}
+    if (deadline && t.slice(0, 10) > deadline &&
+        !confirm("경고: 예약 시각이 마감일(" + deadline + ") 뒤다. 그래도 예약할까?")) return;
+    send(action, {{ time: t }}, true);
+    set.querySelector(".booked").textContent = label + ": " + t.replace("T", " ");
+    set.querySelector(".cancel").hidden = false;
+  }}
+  set.querySelector(".schedule").onclick = () => reserve("예약", "PC예약");
+  set.querySelector(".ghschedule").onclick = () => reserve("깃헙예약", "깃헙예약");
+  set.querySelector(".cancel").onclick = () => {{
+    send("예약취소", null, true);
+    set.querySelector(".booked").textContent = "";
+    set.querySelector(".cancel").hidden = true;
   }};
 }});
 </script>
@@ -221,7 +341,52 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             dest = 제작 / "폐기" / 폴더.name
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(str(폴더), str(dest))
+            with 예약잠금:
+                예약저장([x for x in 예약목록() if x["folder"] != 폴더.name])
             msg = f"폐기 완료 → 제작/폐기/{폴더.name}"
+        elif act == "예약":
+            t = req.get("time", "")
+            if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$", t):
+                msg = "예약 시간이 이상함. 다시 고르세요"
+            elif t <= datetime.now().strftime("%Y-%m-%dT%H:%M"):
+                msg = "지나간 시간엔 예약 못 함"
+            elif not (폴더 / "캡션.txt").exists():
+                msg = "캡션.txt가 없어서 예약 못 함. 캡션작성 먼저"
+            else:
+                with 예약잠금:
+                    목록 = [x for x in 예약목록() if x["folder"] != 폴더.name]
+                    목록.append({"folder": 폴더.name, "time": t})
+                    예약저장(목록)
+                msg = f"예약됨 → {t.replace('T', ' ')} 에 자동 발행. 그때까지 이 검은 창(서버)을 켜두세요"
+        elif act == "깃헙예약":
+            t = req.get("time", "")
+            if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$", t):
+                msg = "예약 시간이 이상함. 다시 고르세요"
+            elif t <= datetime.now().strftime("%Y-%m-%dT%H:%M"):
+                msg = "지나간 시간엔 예약 못 함"
+            elif not (폴더 / "캡션.txt").exists():
+                msg = "캡션.txt가 없어서 예약 못 함. 캡션작성 먼저"
+            else:
+                이유 = 깃허브예약등록(폴더, t)
+                if 이유:
+                    msg = f"깃헙예약 실패: {이유}"
+                else:
+                    msg = (f"깃헙예약됨 → {t.replace('T', ' ')} 무렵 자동 발행 (PC 꺼도 됨). "
+                           "깃허브 사정에 따라 몇 분 늦을 수 있음")
+        elif act == "예약취소":
+            with 예약잠금:
+                예약저장([x for x in 예약목록() if x["folder"] != 폴더.name])
+            msg = "예약 취소됨"
+            깃목록 = 깃큐목록()
+            if any(x["folder"] == 폴더.name for x in 깃목록):
+                깃큐파일.write_text(json.dumps(
+                    [x for x in 깃목록 if x["folder"] != 폴더.name],
+                    ensure_ascii=False, indent=1), encoding="utf-8")
+                깃("add", "깃허브예약.json")
+                깃("commit", "-m", f"깃헙예약 취소: {폴더.name}")
+                code, out = 깃("push")
+                if code != 0:
+                    msg = "예약 취소됨 (단, 깃허브 반영 실패 — 푸시 안 됨)"
         elif act == "발행" and not list(폴더.glob("카드*.html")):
             msg = "이 폴더엔 발행할 카드가 없습니다 (옛 형식). 폐기하거나 다시 제작하세요"
         elif act == "발행" and not (폴더 / "캡션.txt").exists():
@@ -233,11 +398,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     f"{today} PNG 촬영 3회 실패: {폴더.name} {실패}\n")
                 msg = f"PNG 촬영 실패: {', '.join(실패)}. 오류기록에 적음. 발행 중단"
             else:
-                제목 = 폴더.name.split("_", 1)[-1]
-                with (ROOT / "발행대장.txt").open("a", encoding="utf-8") as f:
-                    f.write(f"{today} [{카테고리(폴더)}] {제목}\n")
-                msg = (f"PNG 완료 → {폴더.name} 폴더 안 카드01.png~. "
-                       "인스타에 순서대로 올리고 캡션.txt를 복사해 붙이세요. 발행대장 기록됨")
+                이유 = 전송(폴더)
+                if 이유:
+                    (ROOT / "오류기록.txt").open("a", encoding="utf-8").write(
+                        f"{today} 발행 전송 실패: {폴더.name} {이유}\n")
+                    msg = f"인스타 전송 실패: {이유}. 오류기록에 적음 (발행대장엔 기록 안 함)"
+                else:
+                    제목 = 폴더.name.split("_", 1)[-1]
+                    with (ROOT / "발행대장.txt").open("a", encoding="utf-8") as f:
+                        f.write(f"{today} [{카테고리(폴더)}] {제목}\n")
+                    msg = f"발행 완료 → Make 웹훅으로 전송됨 ({폴더.name}). 발행대장 기록됨"
         else:
             msg = "알 수 없는 요청"
 
@@ -264,6 +434,7 @@ def 내_주소():
 
 
 if __name__ == "__main__":
+    threading.Thread(target=예약감시, daemon=True).start()
     webbrowser.open(f"http://localhost:{PORT}/")
     print("전체확인 화면을 브라우저에 띄웠다. 확인이 끝나면 이 검은 창은 닫아라.")
     print(f"폰(같은 와이파이)에서는 브라우저에 이 주소:  http://{내_주소()}:{PORT}/")

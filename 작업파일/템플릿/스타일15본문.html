@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- 템플릿: 스타일15 · 본문 (포토에세이 말풍선형 — 사진 + 네모 말풍선 박스) | 바꿀 것: 사진(배경), @계정, 박스들(개수·문구·좌우·색)
+     박스 색 3종: 회(연회색 바탕+검정 글) / 검(검정 바탕+흰 글) / 노(노랑 바탕+검정 글). 좌우 번갈아 배치. 각진 모서리 유지 -->
+<style>
+@font-face{font-family:'Pretendard';src:url('file:///C:/Users/mjj/Desktop/클로드쓰레드자동화/작업파일/Pretendard-Regular.otf') format('opentype');font-weight:400;}
+@font-face{font-family:'Pretendard';src:url('file:///C:/Users/mjj/Desktop/클로드쓰레드자동화/작업파일/Pretendard-Bold.otf') format('opentype');font-weight:700;}
+body{margin:0;}
+.b{font-size:34px;font-weight:700;line-height:1.6;padding:26px 36px;max-width:760px;box-sizing:border-box;}
+.회{background:rgba(232,228,220,0.94);color:#111111;}
+.검{background:rgba(17,17,17,0.92);color:#FFFFFF;}
+.노{background:#FFE24A;color:#111111;}
+</style>
+</head>
+<body>
+<div style="width:1080px;height:1350px;box-sizing:border-box;position:relative;overflow:hidden;background:linear-gradient(200deg,#B8AF9F 0%,#948B7C 55%,#6A6257 100%);font-family:'Pretendard','Malgun Gothic',sans-serif;">
+  <!-- 사진 자리: 위 div의 background를 실제 세로 사진으로 교체 (일상 스냅 느낌) -->
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:34px;font-weight:700;letter-spacing:0.1em;">일상 사진 영역</div>
+  <div style="position:absolute;top:34px;left:0;right:0;text-align:center;font-size:32px;color:rgba(255,255,255,0.9);text-shadow:0 2px 10px rgba(0,0,0,0.35);">@계정명</div>
+  <div style="position:absolute;left:0;right:0;top:300px;bottom:110px;display:flex;flex-direction:column;justify-content:space-between;">
+    <div style="align-self:flex-start;margin-left:0;" class="b 회">저는 늘 이런 고민을 했어요.</div>
+    <div style="align-self:flex-end;margin-right:0;" class="b 검">하나의 뚜렷한 강점보단 다 애매하기만 했어요ㅠㅠ</div>
+    <div style="align-self:flex-start;" class="b 회">영상편집은 좋아하는데 전문가 수준은 아니고,<br>글은 쓰는데 작가는 아니고,<br>디자인은 좋아하는데 창작은 못하고..</div>
+    <div style="align-self:flex-end;" class="b 노">간단한 예시를 넣어 볼게요 &gt;&gt;</div>
+  </div>
+</div>
+</body>
+</html>

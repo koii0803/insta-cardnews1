@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- 템플릿: 스타일12 · 본문 (노트 테스트형 — 격자 노트 + 질문 박스 + A/B 선택) | 바꿀 것: 질문 번호·문구, 안내 한 줄, 그림 2개(이모지), A/B 문구, 맨 아래 별 안내줄 -->
+<style>
+@font-face{font-family:'Ssukssuk';src:url('file:///C:/Users/mjj/Desktop/클로드쓰레드자동화/작업파일/Cafe24Ssukssuk.ttf') format('truetype');}
+body{margin:0;}
+.glow-a{background:radial-gradient(closest-side,rgba(150,180,255,0.65),rgba(150,180,255,0) 75%);}
+.glow-b{background:radial-gradient(closest-side,rgba(255,140,190,0.6),rgba(255,140,190,0) 75%);}
+</style>
+</head>
+<body>
+<div style="width:1080px;height:1350px;box-sizing:border-box;position:relative;overflow:hidden;background:#FDFDFB;background-image:linear-gradient(rgba(180,180,180,0.18) 1px,transparent 1px),linear-gradient(90deg,rgba(180,180,180,0.18) 1px,transparent 1px);background-size:54px 54px;font-family:'Ssukssuk','Malgun Gothic',sans-serif;padding:90px 80px 100px;text-align:center;">
+  <div style="position:absolute;top:24px;left:28px;background:linear-gradient(135deg,#FF8FB0,#FF5F8F);border-radius:12px;padding:10px 16px;color:#FFFFFF;font-size:22px;line-height:1.25;transform:rotate(-6deg);">언니의<br>비밀노트</div>
+  <div style="display:inline-block;background:#FFFFFF;border:6px solid #111111;box-shadow:8px 8px 0 rgba(17,17,17,0.9);padding:26px 50px;font-size:56px;color:#111111;">2. 당신은 어느 쪽에 해당되나요?</div>
+  <div style="font-size:34px;color:#333333;margin-top:34px;">*조금이라도 더 가까운 쪽을 고르기!*</div>
+  <div style="display:flex;justify-content:space-around;align-items:center;margin-top:70px;height:420px;">
+    <div style="font-size:230px;line-height:1;">🌅</div>
+    <div style="font-size:230px;line-height:1;">🌙</div>
+  </div>
+  <div style="display:flex;justify-content:space-around;margin-top:60px;">
+    <div class="glow-a" style="width:420px;padding:30px 10px;font-size:48px;color:#111111;line-height:1.5;">A.이마가 둥글고<br>높은 편</div>
+    <div class="glow-b" style="width:420px;padding:30px 10px;font-size:48px;color:#111111;line-height:1.5;">B.이마가 각지고<br>좁은 편</div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:56px;font-size:32px;color:#111111;">★1번부터 4번 항목까지의 답변을 기억해주세요★</div>
+</div>
+</body>
+</html>
