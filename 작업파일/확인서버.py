@@ -10,9 +10,11 @@ import html
 import http.server
 import io
 import json
+import os
 import re
 import shutil
 import subprocess
+import sys
 import threading
 import time
 import urllib.parse
@@ -24,6 +26,13 @@ from pathlib import Path
 from PIL import Image
 
 PORT = 8765
+서버코드시각 = Path(__file__).stat().st_mtime
+
+
+def 재시작():
+    # 이 파일이 고쳐졌을 때 스스로 새 코드로 다시 뜬다 (새로고침만으로 반영되게)
+    os.environ["확인서버_재시작"] = "1"
+    os.execv(sys.executable, [sys.executable, str(Path(__file__).resolve())])
 CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 ROOT = Path(__file__).resolve().parent.parent
 제작 = ROOT / "제작"
@@ -519,6 +528,18 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
     def do_GET(self):
+        if (self.path in ("/", "/index.html")
+                and Path(__file__).stat().st_mtime > 서버코드시각):
+            body = ('<meta charset="utf-8"><meta http-equiv="refresh" content="2">'
+                    '<p style="font:20px \'Malgun Gothic\';padding:40px">'
+                    '서버 코드가 바뀌어서 새로 시작하는 중… 2초 뒤 자동으로 뜹니다</p>').encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            threading.Timer(0.5, 재시작).start()
+            return
         if self.path in ("/", "/index.html"):
             body = 대시보드().encode("utf-8")
             self.send_response(200)
@@ -644,7 +665,10 @@ def 내_주소():
 
 if __name__ == "__main__":
     threading.Thread(target=예약감시, daemon=True).start()
-    webbrowser.open(f"http://localhost:{PORT}/")
+    if os.environ.pop("확인서버_재시작", ""):
+        print("코드가 바뀌어 새로 시작함 — 브라우저가 곧 알아서 새로고침된다.")
+    else:
+        webbrowser.open(f"http://localhost:{PORT}/")
     print("전체확인 화면을 브라우저에 띄웠다. 확인이 끝나면 이 검은 창은 닫아라.")
     print(f"폰(같은 와이파이)에서는 브라우저에 이 주소:  http://{내_주소()}:{PORT}/")
     http.server.ThreadingHTTPServer(("0.0.0.0", PORT), Handler).serve_forever()
