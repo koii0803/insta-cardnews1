@@ -401,15 +401,22 @@ def 대시보드():
   .cal .done {{ color:#0E7C86; }}
   .donebox {{ background:#E8ECEF; border:1px solid #C5CCD3; border-radius:10px; padding:14px 20px; margin-top:20px; }}
   .donebox summary {{ cursor:pointer; font-size:16px; font-weight:700; }}
-  #donearea .set {{ background:#F4F1E8; border-color:#D8D2BE; opacity:1; }}
+  #donearea .set {{ background:#F4F1E8; border-color:#D8D2BE; opacity:1; color:#1A1A1A; }}
+  #donearea .set h2 small {{ color:#667; }}
+  #donearea .set .tag {{ color:#667; }}
+  #donearea .set .result {{ color:#0E7C86; }}
   #donearea .set h2::after {{ content:" ✔ 처리됨"; color:#8A7B4F; font-size:14px; }}
   .set .delete {{ display:none; background:#C0392B; color:#FFF; }}
   #donearea .set .delete {{ display:inline-block; }}
   .hint {{ background:#FFF; border:1px solid #DDD; padding:14px 20px; font-size:16px; line-height:1.8; }}
-  .set {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:20px; margin:24px 0; }}
+  .set {{ background:#2B2E33; border:1px solid #4A4E55; border-radius:10px; padding:20px; margin:24px 0; color:#F2F4F6; }}
   .set.done {{ opacity:0.45; }}
   h2 {{ font-size:22px; margin:0 0 6px; }}
-  h2 small {{ color:#667; font-weight:400; }}
+  h2 small {{ color:#AAB2BC; font-weight:400; }}
+  .set .tag {{ color:#AAB2BC; }}
+  .set .caption {{ color:#1A1A1A; }}
+  .set .deadline {{ color:#1A1A1A; }}
+  .set .result {{ color:#7FD8E0; }}
   .deadline {{ background:#FFF3CD; border:1px solid #E6C860; padding:2px 10px; font-size:14px; font-weight:700; }}
   .tag {{ color:#667; font-size:14px; margin-bottom:12px; }}
   .cards {{ display:flex; flex-wrap:wrap; gap:14px; }}
