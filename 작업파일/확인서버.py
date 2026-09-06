@@ -159,8 +159,35 @@ def 깃큐목록():
 
 def 깃(*args):
     r = subprocess.run(["git", "-C", str(ROOT), *args],
-                       capture_output=True, text=True, timeout=120)
+                       capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=120)
     return r.returncode, (r.stdout + r.stderr).strip()
+
+
+def 깃푸시():
+    # 깃허브 쪽에 발행 결과 커밋이 쌓여 있으면 그냥 push가 거부되므로 먼저 받아온다
+    깃("pull", "--rebase", "--autostash")
+    return 깃("push")
+
+
+def 깃헙현황():
+    # 깃허브 쪽 장부를 읽어 예약 현황판 줄들을 만든다 (⏳ 대기중 / ✅ 발행됨 / ❌ 실패)
+    code, _ = 깃("fetch", "--quiet", "origin", "main")
+    if code != 0:
+        return ["깃허브 연결 안 됨 — 깃헙예약 상태 확인 불가"]
+
+    def 원격(파일):
+        c, out = 깃("show", f"origin/main:{파일}")
+        return out if c == 0 else ""
+
+    try:
+        큐 = json.loads(원격("깃허브예약.json"))
+    except Exception:
+        큐 = []
+    줄 = [f"⏳ 대기중 {x['time'].replace('T', ' ')} — {x['folder'].split('_', 1)[-1]}" for x in 큐]
+    줄 += ["✅ " + l for l in 원격("발행대장.txt").splitlines() if "(깃허브예약)" in l][-3:]
+    줄 += ["❌ " + l for l in 원격("오류기록.txt").splitlines() if "깃허브 예약발행" in l][-3:]
+    return 줄 or ["깃헙예약 기록 없음"]
 
 
 def 깃허브예약등록(폴더, t):
@@ -175,7 +202,7 @@ def 깃허브예약등록(폴더, t):
     깃큐파일.write_text(json.dumps(목록, ensure_ascii=False, indent=1), encoding="utf-8")
     깃("add", "깃허브예약.json", f"제작/{폴더.name}", ".github", "작업파일/깃허브발행.py")
     깃("commit", "-m", f"깃허브예약: {폴더.name} {t}")
-    code, out = 깃("push")
+    code, out = 깃푸시()
     if code != 0:
         return f"깃허브 푸시 실패 — 저장소 연결부터 필요: {out[:160]}"
     return None
@@ -236,6 +263,9 @@ def 대시보드():
 
     개수 = len(부분)
     본문 = "\n".join(부분) if 부분 else "<p>확인할 건이 없습니다.</p>"
+    현황 = [f"⏳ 대기중 {x['time'].replace('T', ' ')} — {x['folder'].split('_', 1)[-1]} (PC예약)"
+            for x in 예약목록()] + 깃헙현황()
+    현황판 = "<br>".join(html.escape(l) for l in 현황)
     return f"""<!doctype html>
 <html>
 <head>
@@ -245,6 +275,9 @@ def 대시보드():
   body {{ margin:0; font-family:'Malgun Gothic',sans-serif; background:#F2F4F6; color:#1A1A1A; }}
   .wrap {{ max-width:1200px; margin:0 auto; padding:32px 24px 80px; }}
   h1 {{ font-size:26px; }}
+  .topbar {{ display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; }}
+  .board {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:12px 18px; font-size:14px; line-height:1.9; min-width:300px; }}
+  .board b {{ font-size:15px; }}
   .hint {{ background:#FFF; border:1px solid #DDD; padding:14px 20px; font-size:16px; line-height:1.8; }}
   .set {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:20px; margin:24px 0; }}
   .set.done {{ opacity:0.45; }}
@@ -266,7 +299,10 @@ def 대시보드():
 </head>
 <body>
 <div class="wrap">
-  <h1>전체확인 — 대기 {개수}건</h1>
+  <div class="topbar">
+    <h1>전체확인 — 대기 {개수}건</h1>
+    <div class="board"><b>예약 현황</b><br>{현황판}</div>
+  </div>
   <div class="hint">위에서부터 보면서 건마다 폐기 또는 발행을 누르면 됩니다.<br>
   확인할 것: 오탈자 / 글자 잘림 / 사진 어울림 / 마감일. 폐기는 바로 안 지워지고 제작/폐기/ 로 이동합니다.</div>
   {본문}
@@ -384,7 +420,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     ensure_ascii=False, indent=1), encoding="utf-8")
                 깃("add", "깃허브예약.json")
                 깃("commit", "-m", f"깃헙예약 취소: {폴더.name}")
-                code, out = 깃("push")
+                code, out = 깃푸시()
                 if code != 0:
                     msg = "예약 취소됨 (단, 깃허브 반영 실패 — 푸시 안 됨)"
         elif act == "발행" and not list(폴더.glob("카드*.html")):
