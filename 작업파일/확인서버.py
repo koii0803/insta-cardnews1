@@ -211,6 +211,12 @@ def 깃헙현황(장부):
     return 줄 or ["깃헙예약 기록 없음"]
 
 
+def 오전오후(시간):
+    # "15:32" → "오후 3:32"
+    시, 분 = map(int, 시간.split(":"))
+    return f"{'오전' if 시 < 12 else '오후'} {시 % 12 or 12}:{분:02d}"
+
+
 def 달력html(행사):
     # 행사: {"YYYY-MM-DD": [(정렬키, css, 글), ...]} → 이번 달 + 예약 걸린 달의 달력 표
     오늘 = date.today().isoformat()
@@ -334,7 +340,8 @@ def 대시보드():
     행사 = {}
     for x in 예약목록() + (장부["큐"] if 장부 else 깃큐목록()):
         날, 시간 = x["time"].split("T")
-        행사.setdefault(날, []).append((시간, "pend", f"⏳{시간} {x['folder'].split('_', 1)[-1]}"))
+        행사.setdefault(날, []).append(
+            (시간, "pend", f"⏳{오전오후(시간)} {x['folder'].split('_', 1)[-1]}"))
     for l in 발행줄:
         m = re.match(r"(\d{4}-\d{2}-\d{2}) (?:\[[^\]]*\] )?(.+)", l)
         if m:
