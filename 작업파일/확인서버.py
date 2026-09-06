@@ -18,7 +18,7 @@ import time
 import urllib.parse
 import urllib.request
 import webbrowser
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from PIL import Image
@@ -225,7 +225,7 @@ def 달력html(행사):
             날 = f"{달}-{일:02d}"
             내용 = "".join(f'<span class="ev {css}">{html.escape(글)}</span>'
                            for _, css, 글 in sorted(행사.get(날, [])))
-            주.append(f'<td class="{"today" if 날 == 오늘 else ""}">'
+            주.append(f'<td data-date="{날}" class="{"today" if 날 == 오늘 else ""}">'
                       f'<span class="day">{일}</span>{내용}</td>')
             if len(주) == 7:
                 줄.append("<tr>" + "".join(주) + "</tr>")
@@ -340,24 +340,44 @@ def 대시보드():
         if m:
             행사.setdefault(m.group(1), []).append(("", "done", "✅" + m.group(2)))
     달력 = 달력html(행사)
+    행사수 = json.dumps({날: len(v) for 날, v in 행사.items()})
+
+    # 최근 3일 예약발행 실패는 맨 위에 빨간 배너로 크게 보여준다
+    오류줄 = 장부["오류"] if 장부 else []
+    try:
+        오류줄 = list(dict.fromkeys(
+            오류줄 + (ROOT / "오류기록.txt").read_text(encoding="utf-8").splitlines()))
+    except Exception:
+        pass
+    기준 = (date.today() - timedelta(days=3)).isoformat()
+    최근실패 = [l for l in 오류줄 if "예약발행" in l and l[:10] >= 기준]
+    배너 = ("" if not 최근실패 else
+            '<div class="alert">⚠ 최근 3일 안에 예약발행 실패가 있다<br>'
+            + "<br>".join(html.escape(l) for l in 최근실패) + "</div>")
     return f"""<!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>전체확인 — 대기 {개수}건</title>
 <style>
-  body {{ margin:0; font-family:'Malgun Gothic',sans-serif; background:#F2F4F6; color:#1A1A1A; }}
+  body {{ margin:0; font-family:'Malgun Gothic',sans-serif; background:#0F1113; color:#1A1A1A; }}
+  h1 {{ color:#F2F4F6; }}
+  .wrap > p {{ color:#F2F4F6; }}
+  .alert {{ background:#C0392B; color:#FFF; border-radius:10px; padding:14px 20px; margin-bottom:16px; font-size:15px; font-weight:700; line-height:1.8; }}
   .wrap {{ max-width:1200px; margin:0 auto; padding:32px 24px 80px; }}
   h1 {{ font-size:26px; }}
   .topbar {{ display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; }}
   .board {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:12px 18px; font-size:14px; line-height:1.9; min-width:300px; }}
   .board b {{ font-size:15px; }}
+  .board .refresh {{ font-size:13px; font-weight:400; padding:3px 12px; background:#E9ECEF; margin-left:10px; }}
   .cal {{ background:#FFF; border:1px solid #CCC; border-radius:10px; padding:6px 20px 18px; margin-top:20px; }}
   .cal h3 {{ font-size:17px; margin:14px 0 8px; }}
   .cal table {{ border-collapse:collapse; width:100%; table-layout:fixed; }}
   .cal th {{ font-size:13px; color:#667; font-weight:400; padding:4px; }}
   .cal td {{ border:1px solid #E2E4E8; vertical-align:top; height:56px; padding:3px 6px; font-size:12px; }}
   .cal .day {{ display:block; font-weight:700; color:#99A; }}
+  .cal td[data-date] {{ cursor:pointer; }}
+  .cal td.picked {{ outline:2px solid #0E7C86; outline-offset:-2px; }}
   .cal .today {{ background:#EAF6F7; }}
   .cal .today .day {{ color:#0E7C86; }}
   .cal .ev {{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
@@ -390,9 +410,10 @@ def 대시보드():
 </head>
 <body>
 <div class="wrap">
+  {배너}
   <div class="topbar">
     <h1>전체확인 — 대기 {개수}건</h1>
-    <div class="board"><b>예약 현황</b><br>{현황판}</div>
+    <div class="board"><b>예약 현황</b><button class="refresh">새로고침</button><br>{현황판}</div>
   </div>
   <div class="hint">위에서부터 보면서 건마다 폐기 또는 발행을 누르면 됩니다.<br>
   확인할 것: 오탈자 / 글자 잘림 / 사진 어울림 / 마감일. 폐기는 바로 안 지워지고 제작/폐기/ 로 이동합니다.</div>
@@ -404,6 +425,19 @@ def 대시보드():
   {본문}
 </div>
 <script>
+const 행사수 = {행사수};
+document.querySelector(".board .refresh").onclick = () => location.reload();
+document.querySelectorAll(".cal td[data-date]").forEach(td => {{
+  td.onclick = () => {{
+    const 날 = td.dataset.date;
+    document.querySelectorAll(".when").forEach(i => {{
+      const 시간 = i.value.includes("T") ? i.value.split("T")[1] : "09:00";
+      i.value = 날 + "T" + 시간;
+    }});
+    document.querySelectorAll(".cal td.picked").forEach(x => x.classList.remove("picked"));
+    td.classList.add("picked");
+  }};
+}});
 const donearea = document.getElementById("donearea");
 const donesum = document.getElementById("donesum");
 function 처리개수갱신() {{
@@ -432,6 +466,9 @@ document.querySelectorAll(".set").forEach(set => {{
   set.querySelector(".publish").onclick = () => {{
     if (deadline && new Date().toISOString().slice(0, 10) > deadline &&
         !confirm("경고: 마감일(" + deadline + ")이 지났다. 그래도 발행할까?")) return;
+    const 오늘 = new Date().toISOString().slice(0, 10);
+    if ((행사수[오늘] || 0) > 0 &&
+        !confirm("오늘 이미 발행·예약이 " + 행사수[오늘] + "건 있다. 그래도 발행할까?")) return;
     send("발행", null, false, 상자로);
   }};
   function reserve(action, label) {{
@@ -439,6 +476,9 @@ document.querySelectorAll(".set").forEach(set => {{
     if (!t) {{ alert("예약 시간을 먼저 고르세요."); return; }}
     if (deadline && t.slice(0, 10) > deadline &&
         !confirm("경고: 예약 시각이 마감일(" + deadline + ") 뒤다. 그래도 예약할까?")) return;
+    const 날 = t.slice(0, 10);
+    if ((행사수[날] || 0) > 0 &&
+        !confirm(날 + " 에 이미 발행·예약이 " + 행사수[날] + "건 있다. 그래도 예약할까?")) return;
     send(action, {{ time: t }}, true, () => {{
       set.querySelector(".booked").textContent = label + ": " + t.replace("T", " ");
       set.querySelector(".cancel").hidden = false;
