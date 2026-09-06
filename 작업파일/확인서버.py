@@ -307,7 +307,7 @@ def 대시보드():
         마감 = 마감일(폴더)
         마감표시 = f'<span class="deadline">마감 {마감}</span>' if 마감 else ""
         틀 = "".join(
-            f'<div class="card"><iframe loading="lazy" src="{urllib.parse.quote(이름)}/{c.name}"></iframe></div>'
+            f'<div class="card"><iframe loading="lazy" src="{urllib.parse.quote(이름)}/{c.name}?v={int(c.stat().st_mtime)}"></iframe></div>'
             for c in 카드)
         조각 = f"""
 <section class="set" data-folder="{html.escape(이름)}" data-deadline="{html.escape(마감 or '')}">
@@ -512,6 +512,11 @@ document.querySelectorAll(".set").forEach(set => {{
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *a, **kw):
         super().__init__(*a, directory=str(제작), **kw)
+
+    def end_headers(self):
+        # 브라우저가 옛날 카드를 재사용하지 않게 — 고치면 바로 반영
+        self.send_header("Cache-Control", "no-cache")
+        super().end_headers()
 
     def do_GET(self):
         if self.path in ("/", "/index.html"):
