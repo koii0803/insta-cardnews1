@@ -286,13 +286,13 @@ def 예약감시():
 
 def 대시보드():
     장부 = 원격장부()
+    try:
+        발행줄 = (ROOT / "발행대장.txt").read_text(encoding="utf-8").splitlines()
+    except Exception:
+        발행줄 = []
     if 장부:
-        발행줄 = 장부["발행"]
-    else:
-        try:
-            발행줄 = (ROOT / "발행대장.txt").read_text(encoding="utf-8").splitlines()
-        except Exception:
-            발행줄 = []
+        # PC에서만 발행된 줄이 달력에서 빠지지 않게 로컬·깃허브 발행대장을 합친다
+        발행줄 = list(dict.fromkeys(발행줄 + 장부["발행"]))
 
     부분, 처리부분 = [], []
     숨김 = 숨김목록()
