@@ -172,56 +172,46 @@ def 숨김목록():
         return []
 
 
-깃큐파일 = ROOT / "깃허브예약.json"
-
-
-def 깃큐목록():
+def 예약큐목록():
+    # R2의 예약표(insta-cards/예약.json). 연결 실패면 []
     try:
-        return json.loads(깃큐파일.read_text(encoding="utf-8"))
+        import r2카드
+        return r2카드.큐읽기()
     except Exception:
         return []
 
 
-def 깃(*args):
-    r = subprocess.run(["git", "-C", str(ROOT), *args],
-                       capture_output=True, text=True,
-                       encoding="utf-8", errors="replace", timeout=120)
-    return r.returncode, (r.stdout + r.stderr).strip()
-
-
-def 깃푸시():
-    # 깃허브 쪽에 발행 결과 커밋이 쌓여 있으면 그냥 push가 거부되므로 먼저 받아온다
-    깃("pull", "--rebase", "--autostash")
-    return 깃("push")
-
-
 def 원격장부():
-    # 깃허브 쪽 장부(예약큐·발행대장·오류기록)를 받아온다. 연결 실패면 None
-    code, _ = 깃("fetch", "--quiet", "origin", "main")
-    if code != 0:
-        return None
-
-    def 원격(파일):
-        c, out = 깃("show", f"origin/main:{파일}")
-        return out if c == 0 else ""
-
+    # R2 쪽 장부(예약표·발행대장·오류기록)를 받아온다. 연결 실패면 None
+    # Worker가 R2에 적은 발행대장·오류기록 줄 중 로컬에 없는 줄은 로컬 파일에 덧붙인다 (기록은 로컬이 본체)
     try:
-        큐 = json.loads(원격("깃허브예약.json"))
+        import r2카드
+        큐 = r2카드.큐읽기()
+        발행 = r2카드.글읽기(r2카드.발행대장키).splitlines()
+        오류 = r2카드.글읽기(r2카드.오류키).splitlines()
     except Exception:
-        큐 = []
-    return {"큐": 큐, "발행": 원격("발행대장.txt").splitlines(),
-            "오류": 원격("오류기록.txt").splitlines()}
+        return None
+    for 파일, 줄들 in (("발행대장.txt", 발행), ("오류기록.txt", 오류)):
+        try:
+            로컬 = (ROOT / 파일).read_text(encoding="utf-8")
+        except Exception:
+            로컬 = ""
+        새줄 = [l for l in 줄들 if l.strip() and l not in 로컬]
+        if 새줄:
+            with (ROOT / 파일).open("a", encoding="utf-8") as f:
+                f.write("\n".join(새줄) + "\n")
+    return {"큐": 큐, "발행": 발행, "오류": 오류}
 
 
-def 깃헙현황(장부):
+def 자동현황(장부):
     # 현황판 줄들 (⏳ 대기중 / ✅ 발행됨 / ❌ 실패)
     if 장부 is None:
-        return ["깃허브 연결 안 됨 — 깃헙예약 상태 확인 불가"]
+        return ["R2 연결 안 됨 — 자동예약 상태 확인 불가"]
     줄 = [f"⏳ 대기중 {x['time'].replace('T', ' ')} — {x['folder'].split('_', 1)[-1]}"
           for x in 장부["큐"]]
-    줄 += ["✅ " + l for l in 장부["발행"] if "(깃허브예약)" in l][-3:]
-    줄 += ["❌ " + l for l in 장부["오류"] if "깃허브 예약발행" in l][-3:]
-    return 줄 or ["깃헙예약 기록 없음"]
+    줄 += ["✅ " + l for l in 장부["발행"] if "(자동예약)" in l][-3:]
+    줄 += ["❌ " + l for l in 장부["오류"] if "예약발행 실패" in l][-3:]
+    return 줄 or ["자동예약 기록 없음"]
 
 
 def 오전오후(시간):
@@ -257,10 +247,9 @@ def 달력html(행사):
     return "".join(표들)
 
 
-def 깃허브예약등록(폴더, t):
-    # PNG 촬영 + JPEG 변환 + R2 업로드 + 예약 기록 + 깃허브 푸시. 성공 None, 실패 이유 문자열
-    # 이미지는 깃허브에 넣지 않는다 (2026-09-16 사용자 지시). R2에만 올리고,
-    # 예약 한 건에 발행에 필요한 전부(캡션·이미지 주소)를 담아 액션이 저장소 밖 파일 없이 돌게 한다.
+def 자동예약등록(폴더, t):
+    # PNG 촬영 + JPEG 변환 + R2 업로드 + R2 예약표 기록. 성공 None, 실패 이유 문자열
+    # 예약 한 건에 발행에 필요한 전부(캡션·이미지 이름)를 담아 Worker가 R2만 보고 돌게 한다.
     if not (폴더 / "캡션.txt").exists():
         return "캡션.txt 없음 → 캡션작성 먼저"
     실패 = 촬영(폴더)
@@ -274,19 +263,14 @@ def 깃허브예약등록(폴더, t):
             Image.open(png).convert("RGB").save(jpg, "JPEG", quality=85)
             url = r2카드.올리기(jpg, r2카드.키(폴더.name, jpg.name))
             images.append({"name": jpg.name, "url": url})
+        if not images:
+            return "올릴 JPEG가 없음 (PNG 촬영 결과 없음)"
+        목록 = [x for x in r2카드.큐읽기() if x["folder"] != 폴더.name]
+        목록.append({"folder": 폴더.name, "time": t, "category": 카테고리(폴더),
+                     "caption": 캡션텍스트(폴더), "images": images})
+        r2카드.큐쓰기(목록)
     except Exception as e:
         return f"R2 업로드 실패: {e}"
-    if not images:
-        return "올릴 JPEG가 없음 (PNG 촬영 결과 없음)"
-    목록 = [x for x in 깃큐목록() if x["folder"] != 폴더.name]
-    목록.append({"folder": 폴더.name, "time": t, "category": 카테고리(폴더),
-                 "caption": 캡션텍스트(폴더), "images": images})
-    깃큐파일.write_text(json.dumps(목록, ensure_ascii=False, indent=1), encoding="utf-8")
-    깃("add", "깃허브예약.json", ".github", "작업파일/깃허브발행.py", "작업파일/r2카드.py")
-    깃("commit", "-m", f"깃허브예약: {폴더.name} {t}")
-    code, out = 깃푸시()
-    if code != 0:
-        return f"깃허브 푸시 실패 — 저장소 연결부터 필요: {out[:160]}"
     return None
 
 
@@ -310,14 +294,14 @@ def 대시보드():
     except Exception:
         발행줄 = []
     if 장부:
-        # PC에서만 발행된 줄이 달력에서 빠지지 않게 로컬·깃허브 발행대장을 합친다
+        # PC에서만 발행된 줄이 달력에서 빠지지 않게 로컬·R2 발행대장을 합친다
         발행줄 = list(dict.fromkeys(발행줄 + 장부["발행"]))
 
     부분, 처리부분 = [], []
     숨김 = 숨김목록()
     예약중 = {x["folder"]: "PC예약: " + x["time"].replace("T", " ") for x in 예약목록()}
-    for x in (장부["큐"] if 장부 else 깃큐목록()):
-        예약중[x["folder"]] = "깃헙예약: " + x["time"].replace("T", " ")
+    for x in (장부["큐"] if 장부 else 예약큐목록()):
+        예약중[x["folder"]] = "자동예약: " + x["time"].replace("T", " ")
     for 폴더 in 폴더들():
         이름 = 폴더.name
         if 이름 in 숨김:
@@ -348,7 +332,7 @@ def 대시보드():
     <button class="publish">발행</button>
     <input type="datetime-local" class="when">
     <button class="schedule">PC예약</button>
-    <button class="ghschedule">깃헙예약</button>
+    <button class="ghschedule">자동예약</button>
     <span class="booked">{html.escape(예약중.get(이름, ""))}</span>
     <button class="cancel" {"" if 이름 in 예약중 else "hidden"}>예약취소</button>
     <button class="delete">삭제</button>
@@ -362,11 +346,11 @@ def 대시보드():
     개수 = len(부분)
     본문 = "\n".join(부분) if 부분 else "<p>확인할 건이 없습니다.</p>"
     현황 = [f"⏳ 대기중 {x['time'].replace('T', ' ')} — {x['folder'].split('_', 1)[-1]} (PC예약)"
-            for x in 예약목록()] + 깃헙현황(장부)
+            for x in 예약목록()] + 자동현황(장부)
     현황판 = "<br>".join(html.escape(l) for l in 현황)
 
     행사 = {}
-    for x in 예약목록() + (장부["큐"] if 장부 else 깃큐목록()):
+    for x in 예약목록() + (장부["큐"] if 장부 else 예약큐목록()):
         날, 시간 = x["time"].split("T")
         행사.setdefault(날, []).append(
             (시간, "pend", f"⏳{오전오후(시간)} {x['folder'].split('_', 1)[-1]}"))
@@ -528,7 +512,7 @@ document.querySelectorAll(".set").forEach(set => {{
     }});
   }}
   set.querySelector(".schedule").onclick = () => reserve("예약", "PC예약");
-  set.querySelector(".ghschedule").onclick = () => reserve("깃헙예약", "깃헙예약");
+  set.querySelector(".ghschedule").onclick = () => reserve("깃헙예약", "자동예약");
   set.querySelector(".cancel").onclick = () => {{
     send("예약취소", null, true);
     set.querySelector(".booked").textContent = "";
@@ -615,12 +599,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             elif not (폴더 / "캡션.txt").exists():
                 msg = "캡션.txt가 없어서 예약 못 함. 캡션작성 먼저"
             else:
-                이유 = 깃허브예약등록(폴더, t)
+                이유 = 자동예약등록(폴더, t)
                 if 이유:
-                    msg = f"깃헙예약 실패: {이유}"
+                    msg = f"자동예약 실패: {이유}"
                 else:
-                    msg = (f"깃헙예약됨 → {t.replace('T', ' ')} 무렵 자동 발행 (PC 꺼도 됨). "
-                           "깃허브 사정에 따라 몇 분 늦을 수 있음")
+                    msg = (f"자동예약됨 → {t.replace('T', ' ')} 무렵 자동 발행 (PC 꺼도 됨). "
+                           "Worker가 매시 :00·:45에 돌아 최대 45분 늦을 수 있음")
         elif act == "숨김":
             목록 = 숨김목록()
             if 폴더.name not in 목록:
@@ -631,16 +615,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             with 예약잠금:
                 예약저장([x for x in 예약목록() if x["folder"] != 폴더.name])
             msg = "예약 취소됨"
-            깃목록 = 깃큐목록()
-            if any(x["folder"] == 폴더.name for x in 깃목록):
-                깃큐파일.write_text(json.dumps(
-                    [x for x in 깃목록 if x["folder"] != 폴더.name],
-                    ensure_ascii=False, indent=1), encoding="utf-8")
-                깃("add", "깃허브예약.json")
-                깃("commit", "-m", f"깃헙예약 취소: {폴더.name}")
-                code, out = 깃푸시()
-                if code != 0:
-                    msg = "예약 취소됨 (단, 깃허브 반영 실패 — 푸시 안 됨)"
+            try:
+                import r2카드
+                목록 = r2카드.큐읽기()
+                if any(x["folder"] == 폴더.name for x in 목록):
+                    r2카드.큐쓰기([x for x in 목록 if x["folder"] != 폴더.name])
+            except Exception as e:
+                msg = f"예약 취소됨 (단, R2 예약표 반영 실패: {e})"
         elif act == "발행" and not list(폴더.glob("카드*.html")):
             msg = "이 폴더엔 발행할 카드가 없습니다 (옛 형식). 폐기하거나 다시 제작하세요"
         elif act == "발행" and not (폴더 / "캡션.txt").exists():

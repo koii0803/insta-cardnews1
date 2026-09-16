@@ -1,8 +1,8 @@
-# 사람 검수 없이 발행 시각을 자동으로 뽑아 깃헙예약에 넣는다 (2026-09-16 사용자 지시).
+# 사람 검수 없이 발행 시각을 자동으로 뽑아 R2 예약표에 넣는다 (Cloudflare Worker가 발행) (2026-09-16 사용자 지시).
 # 쓰는 법: python 작업파일/자동예약.py <제작폴더명>   (예: 2026-09-17_단풍시기)
 # 시각 규칙: 오전 06:00~08:30 / 오후 15:00~18:00 두 창, 창마다 하루 1건(하루 최대 2건),
 #            창 고르는 순서는 날마다 랜덤, 창 안에서 분 단위 랜덤.
-# 실제 촬영·R2 업로드·푸시는 확인서버.py의 깃허브예약등록을 그대로 쓴다 (중복 코드 없음).
+# 실제 촬영·R2 업로드·예약표 기록은 확인서버.py의 자동예약등록을 그대로 쓴다 (중복 코드 없음).
 
 import random
 import sys
@@ -23,7 +23,7 @@ def 분으로(t):
 
 
 def 시각뽑기(예약된, now):
-    # 예약된: 기존 깃헙예약의 datetime 목록. 성공 시 "YYYY-MM-DDTHH:MM", 자리 없으면 None
+    # 예약된: 기존 자동예약의 datetime 목록. 성공 시 "YYYY-MM-DDTHH:MM", 자리 없으면 None
     for 며칠뒤 in range(14):
         날 = date.today() + timedelta(days=며칠뒤)
         그날 = [t for t in 예약된 if t.date() == 날]
@@ -52,7 +52,7 @@ def main():
         print("폴더 없음:", 폴더)
         sys.exit(1)
     예약된 = []
-    for x in 확인서버.깃큐목록():
+    for x in 확인서버.예약큐목록():
         try:
             예약된.append(datetime.strptime(x["time"], "%Y-%m-%dT%H:%M"))
         except Exception:
@@ -61,13 +61,13 @@ def main():
     if not t:
         print("2주 안에 빈 자리가 없음 — 예약 과다, 사람 확인 필요")
         sys.exit(1)
-    이유 = 확인서버.깃허브예약등록(폴더, t)
+    이유 = 확인서버.자동예약등록(폴더, t)
     if 이유:
         print("예약 실패:", 이유)
         확인서버.ROOT.joinpath("오류기록.txt").open("a", encoding="utf-8").write(
             f"{date.today().isoformat()} 자동예약 실패: {폴더.name} {이유}\n")
         sys.exit(1)
-    print(f"예약 완료: {폴더.name} → {t.replace('T', ' ')} (깃헙예약, PC 꺼져도 발행됨)")
+    print(f"예약 완료: {폴더.name} → {t.replace('T', ' ')} (자동예약, Worker가 :00·:45에 발행, PC 꺼져도 됨)")
 
 
 if __name__ == "__main__":

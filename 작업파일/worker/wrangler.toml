@@ -1,0 +1,14 @@
+# 인스타 예약발행 Worker 설정. 배포: 작업파일/worker 에서 `npx wrangler deploy`
+# 비밀값: `npx wrangler secret put MAKE_WEBHOOK` (Make 웹훅 주소). 파일에 적지 않는다
+name = "insta-cards-publish"
+main = "index.js"
+compatibility_date = "2026-09-01"
+account_id = "483a48f9c76d80012303cb3f6260c1bb"
+workers_dev = true
+
+[triggers]
+crons = ["0,45 * * * *"]   # 매시 :00·:45 (사용자 확정 2026-09-17, 15분마다 깨우지 않음)
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "babcheck-img"

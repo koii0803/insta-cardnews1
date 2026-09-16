@@ -47,3 +47,38 @@ def 지우기(key):
     if not key.startswith(PREFIX):
         raise RuntimeError(f"{PREFIX} 밖은 못 지움: {key}")
     client().delete_object(Bucket=env()["R2_BUCKET"], Key=key)
+
+
+# ── 예약표·장부(글자 파일) ── Worker와 같은 자리를 읽고 쓴다
+큐키 = PREFIX + "예약.json"
+발행대장키 = PREFIX + "발행대장.txt"
+오류키 = PREFIX + "오류기록.txt"
+
+
+def 글읽기(key):
+    # 없으면 "" (연결 실패는 예외로 올림)
+    try:
+        r = client().get_object(Bucket=env()["R2_BUCKET"], Key=key)
+        return r["Body"].read().decode("utf-8")
+    except client().exceptions.NoSuchKey:
+        return ""
+
+
+def 글쓰기(key, 내용, 종류="text/plain; charset=utf-8"):
+    if not key.startswith(PREFIX):
+        raise RuntimeError(f"{PREFIX} 밖은 못 씀: {key}")
+    client().put_object(Bucket=env()["R2_BUCKET"], Key=key,
+                        Body=내용.encode("utf-8"), ContentType=종류)
+
+
+def 큐읽기():
+    import json
+    try:
+        return json.loads(글읽기(큐키) or "[]")
+    except Exception:
+        return []
+
+
+def 큐쓰기(목록):
+    import json
+    글쓰기(큐키, json.dumps(목록, ensure_ascii=False, indent=1), "application/json")
