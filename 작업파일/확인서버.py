@@ -87,14 +87,18 @@ def 촬영(폴더):
     return 실패
 
 
+def 캡션텍스트(폴더):
+    # [대체텍스트] 줄은 인스타 캡션에 들어가면 안 되므로 뺀다
+    줄들 = (폴더 / "캡션.txt").read_text(encoding="utf-8").splitlines()
+    return chr(10).join(l for l in 줄들 if not l.startswith("[대체텍스트]")).strip()
+
+
 def 전송(폴더):
     # PNG → JPEG(인스타 API는 JPEG만 받음) → base64 → Make 웹훅으로 한 번에 보낸다.
     # 성공하면 None, 실패하면 이유 문자열
     if not (폴더 / "캡션.txt").exists():
         return "캡션.txt 없음 → 캡션작성 먼저"
-    # [대체텍스트] 줄은 인스타 캡션에 들어가면 안 되므로 뺀다
-    줄들 = (폴더 / "캡션.txt").read_text(encoding="utf-8").splitlines()
-    캡션 = chr(10).join(l for l in 줄들 if not l.startswith("[대체텍스트]")).strip()
+    캡션 = 캡션텍스트(폴더)
     images = []
     for png in sorted(폴더.glob("카드*.png")):
         buf = io.BytesIO()
@@ -254,16 +258,31 @@ def 달력html(행사):
 
 
 def 깃허브예약등록(폴더, t):
-    # PNG 촬영 + JPEG 변환 + 예약 기록 + 깃허브 푸시. 성공 None, 실패 이유 문자열
+    # PNG 촬영 + JPEG 변환 + R2 업로드 + 예약 기록 + 깃허브 푸시. 성공 None, 실패 이유 문자열
+    # 이미지는 깃허브에 넣지 않는다 (2026-09-16 사용자 지시). R2에만 올리고,
+    # 예약 한 건에 발행에 필요한 전부(캡션·이미지 주소)를 담아 액션이 저장소 밖 파일 없이 돌게 한다.
+    if not (폴더 / "캡션.txt").exists():
+        return "캡션.txt 없음 → 캡션작성 먼저"
     실패 = 촬영(폴더)
     if 실패:
         return f"PNG 촬영 실패: {', '.join(실패)}"
-    for png in sorted(폴더.glob("카드*.png")):
-        Image.open(png).convert("RGB").save(png.with_suffix(".jpg"), "JPEG", quality=85)
+    images = []
+    try:
+        import r2카드
+        for png in sorted(폴더.glob("카드*.png")):
+            jpg = png.with_suffix(".jpg")
+            Image.open(png).convert("RGB").save(jpg, "JPEG", quality=85)
+            url = r2카드.올리기(jpg, r2카드.키(폴더.name, jpg.name))
+            images.append({"name": jpg.name, "url": url})
+    except Exception as e:
+        return f"R2 업로드 실패: {e}"
+    if not images:
+        return "올릴 JPEG가 없음 (PNG 촬영 결과 없음)"
     목록 = [x for x in 깃큐목록() if x["folder"] != 폴더.name]
-    목록.append({"folder": 폴더.name, "time": t})
+    목록.append({"folder": 폴더.name, "time": t, "category": 카테고리(폴더),
+                 "caption": 캡션텍스트(폴더), "images": images})
     깃큐파일.write_text(json.dumps(목록, ensure_ascii=False, indent=1), encoding="utf-8")
-    깃("add", "깃허브예약.json", f"제작/{폴더.name}", ".github", "작업파일/깃허브발행.py")
+    깃("add", "깃허브예약.json", ".github", "작업파일/깃허브발행.py", "작업파일/r2카드.py")
     깃("commit", "-m", f"깃허브예약: {폴더.name} {t}")
     code, out = 깃푸시()
     if code != 0:
